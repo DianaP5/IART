@@ -63,14 +63,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 			
 		Component verticalGlue = Box.createVerticalGlue();
 		pnlButtons.add(verticalGlue);
-		
-		JPanel panel = new JPanel();
-		pnlButtons.add(panel);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		
-		Component rigidArea = Box.createRigidArea(new Dimension(10, 0));
-		panel.add(rigidArea);
-		
+
 		Component verticalGlue1 = Box.createVerticalGlue();
 		pnlButtons.add(verticalGlue1);
 		
@@ -103,13 +96,9 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		JButton botaoComecar = new JButton("Come\u00E7ar");
 		//começar jogo
 	
-		Component verticalGlue6 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue6);
 		botaoComecar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pnlButtons.add(botaoComecar);
 		
-		Component verticalGlue7 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue7);
 		
 		JButton botaoSair = new JButton("Sair");
 		botaoSair.addActionListener(new ActionListener() {
@@ -126,8 +115,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		botaoSair.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pnlButtons.add(botaoSair);
 		
-		Component verticalGlue8 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue8);
 	}
 
 

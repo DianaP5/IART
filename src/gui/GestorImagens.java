@@ -19,7 +19,6 @@ public class GestorImagens {
 		background,
 		pecaJogador1,
 		pecaJogador2,
-		//Nomejogo,
 	} 
 	
 	
