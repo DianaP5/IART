@@ -50,7 +50,7 @@ public class FrameJogo extends JFrame{
 				}
 			}
 		});
-		this.setBounds(100, 100, 1000, 800);
+		this.setBounds(100, 100, 800, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(new BorderLayout(0,0));
 
