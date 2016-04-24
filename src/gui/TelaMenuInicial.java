@@ -1,7 +1,5 @@
 package gui;
 
-
-
 import static gui.Utilitarios.imprimirPeca;
 import static gui.Utilitarios.imprimirTabuleiro;
 import gui.GestorImagens.TipoImagem;
@@ -26,28 +24,14 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import logic.ConstrutorTabuleiro;
-import logic.Jogo;
 import logic.Peca;
 import logic.Peca.TipoPeca;
-//import net.sf.lipermi.exception.LipeRMIException;
-//import Batalha.constantes.Constantes;
-//import Batalha.gui.GestorImagens.TipoImagem;
-//import Batalha.jogadores.Cliente;
-//import Batalha.jogadores.Servidor;
-//import Batalha.logica.ConstrutorTabuleiro;
-//import Batalha.logica.Jogo;
-//import Batalha.logica.Navio;
-//import Batalha.logica.Tabuleiro;
-
-
 
 @SuppressWarnings("serial")
 public class TelaMenuInicial extends JPanel implements MouseListener, KeyListener, MouseMotionListener{
 
-	private FrameJogo frameJogo;
 	private JPanel pnlButtons;
 	private boolean ativa = false;
 	
@@ -55,15 +39,6 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 	private ConstrutorTabuleiro construtorTabuleiro = null;
 	
 	private int ratoX, ratoY;
-	
-	private Jogo jogo;
-	private JTextField txtIP;
-	
-	
-	public void novoJogo(Jogo jogo){
-		this.repaint();
-	}
-	
 	
 	/**
 	 * Create the panel.
@@ -83,23 +58,7 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 		pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout.X_AXIS));
 			
 		Component verticalGlue = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue);
-		
-		/*JCheckBox chkboxServidor = new JCheckBox("Servidor");
-		chkboxServidor.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				try {
-					txtIP.setText(InetAddress.getLocalHost().getHostAddress());
-				} catch (UnknownHostException e1) {
-					e1.printStackTrace();
-				}
-				txtIP.setEnabled(e.getStateChange() == ItemEvent.DESELECTED);
-				txtIP.getParent().revalidate();
-			}
-		});
-		
-		chkboxServidor.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(chkboxServidor);		
+		pnlButtons.add(verticalGlue);	
 		
 		JPanel panel = new JPanel();
 		pnlButtons.add(panel);
@@ -108,90 +67,11 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 		Component rigidArea = Box.createRigidArea(new Dimension(10, 0));
 		panel.add(rigidArea);
 		
-		txtIP = new JTextField();
-		panel.add(txtIP);
-		txtIP.setMaximumSize(new Dimension(Integer.MAX_VALUE, txtIP.getPreferredSize().height) );
-		
-		try {
-			txtIP.setText(InetAddress.getLocalHost().getHostAddress());
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		}
-		txtIP.setColumns(5);
-		
 		Component rigidArea_1 = Box.createRigidArea(new Dimension(10, 0));
 		panel.add(rigidArea_1);
-		txtIP.setVisible(!chkboxServidor.isSelected());*/
 		
 		Component verticalGlue1 = Box.createHorizontalGlue();
 		pnlButtons.add(verticalGlue1);
-		
-		
-		/*JButton pecaPreta = new JButton();
-		pecaPreta.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				selecionarPeca(TipoPeca.pecaJogador1);
-			}
-		});
-		pecaPreta.setIcon(new ImageIcon(GestorImagens.getImage(TipoPeca.pecaJogador1)));
-		pecaPreta.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(pecaPreta);
-		
-		Component verticalGlue2 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue2);
-		
-		JButton pecaVermelha = new JButton();
-		pecaVermelha.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				selecionarPeca(TipoPeca.pecaJogador2);
-			}
-		});
-		pecaVermelha.setIcon(new ImageIcon(GestorImagens.getImage(TipoPeca.pecaJogador2)));
-		pecaVermelha.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(pecaVermelha);
-		*/
-		
-		/*
-		Component verticalGlue3 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue3);
-		
-		JButton couracado = new JButton();
-		couracado.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				selecionarNavio(TipoNavio.couracado);
-			}
-		});
-		couracado.setIcon(new ImageIcon(GestorImagens.getImage(TipoNavio.couracado)));
-		couracado.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(couracado);
-		
-		Component verticalGlue4 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue4);
-		
-		JButton torpedeiro = new JButton();
-		torpedeiro.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				selecionarNavio(TipoNavio.torpedeiro);
-			}
-		});
-		torpedeiro.setIcon(new ImageIcon(GestorImagens.getImage(TipoNavio.torpedeiro)));
-		torpedeiro.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(torpedeiro);
-		
-		Component verticalGlue5 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue5);
-		
-		JButton portaAvioes = new JButton();
-		portaAvioes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				selecionarNavio(TipoNavio.portaAvioes);
-			}
-		});
-		portaAvioes.setIcon(new ImageIcon(GestorImagens.getImage(TipoNavio.portaAvioes)));
-		portaAvioes.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(portaAvioes);
-		
-		*/
 		
 		validate();
 		
@@ -285,39 +165,6 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 		int x = e.getX()/dimensao-1;
 		int y = e.getY()/dimensao-1;
 		
-		/*if(e.getButton() == MouseEvent.BUTTON1 && construtorTabuleiro == null){
-			construtorTabuleiro = new ConstrutorTabuleiro();
-			this.repaint();
-		}
-		else if (x >= 0 && y >= 0 && x < 6 && y < 6)
-		{
-			if (e.getButton() == MouseEvent.BUTTON1 && PecaSelecionada != null) {
-				System.out.println("Valid click");
-				Peca s = new Peca(PecaSelecionada, x, y, ativa);
-				if (construtorTabuleiro.adicionarPeca(s))
-				{
-					System.out.println("Peca adicionada");
-					this.repaint();
-				}
-				else
-				{
-					System.out.println("Navio nao adicionado");
-				}
-				
-			}
-			else if (e.getButton() == MouseEvent.BUTTON3)
-			{
-				if (construtorTabuleiro.retirarPeca(x, y))
-				{
-					System.out.println("Navio retirado");
-					this.repaint();
-				}
-				else
-				{
-					System.out.println("Navio nao retirado");
-				}
-			}
-		}*/
 	}
 
 	@Override
@@ -392,7 +239,6 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 		int ladoJogo = 6 + 1;
 		int dimensao = getLadoTela() / ladoJogo;
 		
-		System.out.println("dimensao: " + dimensao);
 		int x = e.getX()/dimensao-1;
 		int y = e.getY()/dimensao-1;
 		if (ratoX != x || ratoY != y)

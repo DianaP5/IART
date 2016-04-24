@@ -1,6 +1,5 @@
 package gui;
 
-
 import static gui.Utilitarios.imprimirPeca;
 import static gui.Utilitarios.imprimirTabuleiro;
 import gui.GestorImagens.TipoImagem;
@@ -13,59 +12,37 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
-import logic.Peca.TipoPeca;
-//import Batalha.constantes.Constantes;
-//import Batalha.gui.GestorImagens.TipoImagem;
-//import Batalha.jogadores.Cliente;
-//import Batalha.jogadores.Servidor;
-//import Batalha.logica.ConstrutorTabuleiro;
-//import Batalha.logica.Jogo;
-//import Batalha.logica.Navio;
-//import Batalha.logica.Tabuleiro;
 import logic.ConstrutorTabuleiro;
 import logic.Jogo;
 import logic.Peca;
-
-
+import logic.Peca.TipoPeca;
 
 @SuppressWarnings("serial")
 public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener, MouseMotionListener{
 
-	private FrameJogo frameJogo;
 	private JPanel pnlButtons;
 	private boolean ativa = false;
 	private TipoPeca PecaSelecionada = null;
 	private ConstrutorTabuleiro construtorTabuleiro = null;
 	private int ratoX, ratoY;
 	
-	private Jogo jogo;
-	private JTextField txtIP;
-	
-	
 	public void novoJogo(Jogo jogo){
 		this.repaint();
 	}
-	
 	
 	/**
 	 * Create the panel.
@@ -87,43 +64,12 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		Component verticalGlue = Box.createVerticalGlue();
 		pnlButtons.add(verticalGlue);
 		
-		JCheckBox chkboxServidor = new JCheckBox("Servidor");
-		chkboxServidor.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				try {
-					txtIP.setText(InetAddress.getLocalHost().getHostAddress());
-				} catch (UnknownHostException e1) {
-					e1.printStackTrace();
-				}
-				txtIP.setEnabled(e.getStateChange() == ItemEvent.DESELECTED);
-				txtIP.getParent().revalidate();
-			}
-		});
-		
-		chkboxServidor.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(chkboxServidor);
-		
 		JPanel panel = new JPanel();
 		pnlButtons.add(panel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		
 		Component rigidArea = Box.createRigidArea(new Dimension(10, 0));
 		panel.add(rigidArea);
-		
-		txtIP = new JTextField();
-		panel.add(txtIP);
-		txtIP.setMaximumSize(new Dimension(Integer.MAX_VALUE, txtIP.getPreferredSize().height) );
-		
-		try {
-			txtIP.setText(InetAddress.getLocalHost().getHostAddress());
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		}
-		txtIP.setColumns(5);
-		
-		Component rigidArea_1 = Box.createRigidArea(new Dimension(10, 0));
-		panel.add(rigidArea_1);
-		txtIP.setVisible(!chkboxServidor.isSelected());
 		
 		Component verticalGlue1 = Box.createVerticalGlue();
 		pnlButtons.add(verticalGlue1);
@@ -147,105 +93,16 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 				selecionarPeca(TipoPeca.pecaJogador2);
 			}
 		});
+		
 		pecaVermelha.setIcon(new ImageIcon(GestorImagens.getImage(TipoPeca.pecaJogador2)));
 		pecaVermelha.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pnlButtons.add(pecaVermelha);
-		
-		
-		/*
-		Component verticalGlue3 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue3);
-		
-		JButton couracado = new JButton();
-		couracado.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				selecionarNavio(TipoNavio.couracado);
-			}
-		});
-		couracado.setIcon(new ImageIcon(GestorImagens.getImage(TipoNavio.couracado)));
-		couracado.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(couracado);
-		
-		Component verticalGlue4 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue4);
-		
-		JButton torpedeiro = new JButton();
-		torpedeiro.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				selecionarNavio(TipoNavio.torpedeiro);
-			}
-		});
-		torpedeiro.setIcon(new ImageIcon(GestorImagens.getImage(TipoNavio.torpedeiro)));
-		torpedeiro.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(torpedeiro);
-		
-		Component verticalGlue5 = Box.createVerticalGlue();
-		pnlButtons.add(verticalGlue5);
-		
-		JButton portaAvioes = new JButton();
-		portaAvioes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				selecionarNavio(TipoNavio.portaAvioes);
-			}
-		});
-		portaAvioes.setIcon(new ImageIcon(GestorImagens.getImage(TipoNavio.portaAvioes)));
-		portaAvioes.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(portaAvioes);
-		
-		*/
-		
+
 		validate();
 		
 		JButton botaoComecar = new JButton("Come\u00E7ar");
-		/*botaoComecar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boolean sucesso = false;
-				if (construtorTabuleiro == null) return;
-				Tabuleiro tabuleiro = construtorTabuleiro.getTabuleiro();
-				if (tabuleiro == null)
-				{
-					JOptionPane.showMessageDialog(frameJogo, "Adicione todos os navios.");
-					return;
-				}
-				if (chkboxServidor.isSelected()){
-				try {
-						Servidor servidor = new Servidor();
-						jogo = new Jogo(servidor, tabuleiro);
-						botaoComecar.setEnabled(false);
-						sucesso = true;
-					} catch (LipeRMIException ex) {
-						ex.printStackTrace();
-						JOptionPane.showMessageDialog(frameJogo, "LipeRMIException: "+ex.getMessage());
-					} catch (IOException ex) {
-						ex.printStackTrace();
-						JOptionPane.showMessageDialog(frameJogo, "IOException: "+ex.getMessage());
-					}
-				}
-				else
-				{
-					try {
-						Cliente cliente = new Cliente(txtIP.getText());
-						jogo = new Jogo(cliente, tabuleiro);
-						botaoComecar.setEnabled(false);
-						sucesso = true;
-					} catch (LipeRMIException ex) {
-						ex.printStackTrace();
-						JOptionPane.showMessageDialog(frameJogo, "LipeRMIException: "+ex.getMessage());
-					} catch (IOException ex) {
-						ex.printStackTrace();
-						JOptionPane.showMessageDialog(frameJogo, "IOException: "+ex.getMessage());
-					}
-				}
-				if (sucesso) {
-					try {
-						frameJogo.trocarTela(new TelaJogo(frameJogo, jogo));
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		});*/
-		
+		//começar jogo
+	
 		Component verticalGlue6 = Box.createVerticalGlue();
 		pnlButtons.add(verticalGlue6);
 		botaoComecar.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -253,11 +110,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		
 		Component verticalGlue7 = Box.createVerticalGlue();
 		pnlButtons.add(verticalGlue7);
-		
-		
-		
-		
-		
 		
 		JButton botaoSair = new JButton("Sair");
 		botaoSair.addActionListener(new ActionListener() {
