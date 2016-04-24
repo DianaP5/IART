@@ -49,7 +49,8 @@ public class ConstrutorTabuleiro {
 	public boolean adicionarPeca(Peca peca)
 	{
 		for(int i = 0; i < pecas.size();i++){
-			if(pecas.get(i).getTipo() == peca.getTipo()) return false;
+			if(pecas.get(i).getTipo() == peca.getTipo()) 
+				return false;
 		}
 		
 		boolean areaDesocupada = true;
@@ -91,12 +92,14 @@ public class ConstrutorTabuleiro {
 	}
 	
 	public boolean tabuleiroPreenchido(){
-		if(pecas.size() == Peca.TipoPeca.values().length) return true;
+		if(pecas.size() == Peca.TipoPeca.values().length) 
+			return true;
 		return false;
 	}
 	
 	public Tabuleiro getTabuleiro()
 	{
+		// (Peca)
 		if (pecas.size() == Peca.TipoPeca.values().length)
 		{
 			return new Tabuleiro(pecas, tamanho);

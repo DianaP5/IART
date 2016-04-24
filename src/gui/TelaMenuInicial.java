@@ -2,6 +2,10 @@ package gui;
 
 
 
+import static gui.Utilitarios.imprimirPeca;
+import static gui.Utilitarios.imprimirTabuleiro;
+import gui.GestorImagens.TipoImagem;
+
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -10,31 +14,25 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import logic.ConstrutorTabuleiro;
+import logic.Jogo;
+import logic.Peca;
+import logic.Peca.TipoPeca;
 //import net.sf.lipermi.exception.LipeRMIException;
-
-
-
 //import Batalha.constantes.Constantes;
 //import Batalha.gui.GestorImagens.TipoImagem;
 //import Batalha.jogadores.Cliente;
@@ -42,27 +40,7 @@ import javax.swing.JTextField;
 //import Batalha.logica.ConstrutorTabuleiro;
 //import Batalha.logica.Jogo;
 //import Batalha.logica.Navio;
-
 //import Batalha.logica.Tabuleiro;
-
-
-
-
-
-
-
-
-import net.sf.lipermi.exception.LipeRMIException;
-import Jogadores.Cliente;
-import Jogadores.Servidor;
-import logic.ConstrutorTabuleiro;
-import logic.Jogo;
-import logic.Peca;
-import logic.Tabuleiro;
-import logic.Peca.TipoPeca;
-import gui.GestorImagens.TipoImagem;
-import static gui.Utilitarios.imprimirPeca;
-import static gui.Utilitarios.imprimirTabuleiro;
 
 
 

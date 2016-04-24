@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 
 import logic.Peca;
-import Jogadores.LigacaoInimigo;
+//import jogadores.LigacaoInimigo;
 //import Batalha.constantes.Constantes;
 import logic.Jogo.Estado;
 //import Batalha.logica.Jogo.ResultadoTiro;
@@ -19,7 +19,7 @@ public class Jogo<ResultadoMovimento> {
 	
 	
 	private Estado estado = Estado.Espera;
-	private LigacaoInimigo rede;
+	//private LigacaoInimigo rede;
 	private Tabuleiro tabuleiro;
 	//private TiposTentativa[][] tentativas;
 	private boolean iniciado = false;
@@ -119,12 +119,13 @@ public class Jogo<ResultadoMovimento> {
 		if (posX < 0 || posY < 0 || posX >= 6 || posY >= 6)
 			throw new InvalidParameterException("Posicao invalida");
 		//if (tentativas[posY][posX] != TiposTentativa.Vazio) return;
-		ResultadoMovimento resultado = rede.lancaTiro(posX, posY);
+		/*ResultadoMovimento resultado = rede.lancaTiro(posX, posY);
 		boolean acertou = (resultado != ResultadoMovimento.Falhou);
 		//tentativas[posY][posX] = (acertou ? TiposTentativa.Acertou : TiposTentativa.Falhou);
 		if (!acertou) this.estado = Estado.Espera;
 		else if (resultado == ResultadoMovimento.JogadorPerdeu) this.estado = Estado.Ganho;
 		notificarObservadores();
+		*/
 	}
 	
 	public boolean verificaPerdeu(){
