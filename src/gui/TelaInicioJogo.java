@@ -92,14 +92,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		pnlButtons.add(pecaVermelha);
 
 		validate();
-		
-		JButton botaoComecar = new JButton("Come\u00E7ar");
-		//começar jogo
 	
-		botaoComecar.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlButtons.add(botaoComecar);
-		
-		
 		JButton botaoSair = new JButton("Sair");
 		botaoSair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
