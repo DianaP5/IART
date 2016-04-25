@@ -26,8 +26,10 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import logic.Board;
 import logic.ConstrutorTabuleiro;
 import logic.Jogo;
+import logic.Moves;
 import logic.Peca;
 import logic.Peca.TipoPeca;
 
@@ -37,8 +39,15 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 	private JPanel pnlButtons;
 	private boolean ativa = false;
 	private TipoPeca PecaSelecionada = null;
-	private ConstrutorTabuleiro construtorTabuleiro = null;
+	//private ConstrutorTabuleiro construtorTabuleiro = null;
+	private Board board= null;
 	private int ratoX, ratoY;
+	private Moves moves=new Moves();
+	private int player=-1;
+	private int[] rotate={0,0};
+	int[] p1={2,-2,3,-3,4,-4,1,-1};
+	int[] p2={6,-6,7,-7,8,-8,5,-5};
+	
 	
 	public void novoJogo(Jogo jogo){
 		this.repaint();
@@ -71,9 +80,10 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		pecaPreta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				selecionarPeca(TipoPeca.pecaJogador1);
+				player=0;
 			}
 		});
-		pecaPreta.setIcon(new ImageIcon(GestorImagens.getImage(TipoPeca.pecaJogador1)));
+		pecaPreta.setIcon(new ImageIcon(GestorImagens.getImage(0)));
 		pecaPreta.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pnlButtons.add(pecaPreta);
 		
@@ -84,10 +94,11 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		pecaVermelha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				selecionarPeca(TipoPeca.pecaJogador2);
+				player=1;
 			}
 		});
 		
-		pecaVermelha.setIcon(new ImageIcon(GestorImagens.getImage(TipoPeca.pecaJogador2)));
+		pecaVermelha.setIcon(new ImageIcon(GestorImagens.getImage(1)));
 		pecaVermelha.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pnlButtons.add(pecaVermelha);
 
@@ -141,19 +152,33 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		
 		int x = e.getX()/dimensao-1;
 		int y = e.getY()/dimensao-1;
+		System.out.println(x+" "+y);
+		if(e.getButton() == MouseEvent.BUTTON1 && board == null){
 		
-		if(e.getButton() == MouseEvent.BUTTON1 && construtorTabuleiro == null){
-			construtorTabuleiro = new ConstrutorTabuleiro();
+			board = new Board();
+			moves.setBoard(board);
+			System.out.println("board created");
+			
 			this.repaint();
 		}
 		else if (x >= 0 && y >= 0 && x < 6 && y < 6)
 		{
-			if (e.getButton() == MouseEvent.BUTTON1 && PecaSelecionada != null) {
+			if (e.getButton() == MouseEvent.BUTTON1) {
 				System.out.println("Valid click");
-				
-				//for(int i = 0; i < 10; i++){
-					Peca s = new Peca(PecaSelecionada, x, y, ativa);
-					if (construtorTabuleiro.adicionarPeca(s))
+					
+					if (player == 0)
+						if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
+							moves.placePiece(x, y,player,p1[rotate[player]]);
+							System.out.println(player+" "+rotate[player]+" "+p1[rotate[player]]);
+						}else moves.placePiece(x, y, player, -p1[rotate[player]]);
+					else if (player == 1)
+						if (p2[rotate[player]] > 4 && p2[rotate[player]] < 9)
+							moves.placePiece(x, y,player,p2[rotate[player]]-4);
+						else moves.placePiece(x, y, player, -p2[rotate[player]]+4);
+
+					System.out.println(player+" "+rotate[player]+" "+p1[rotate[player]]);
+					moves.getBoard().printBoard();
+				/*	if (construtorTabuleiro.adicionarPeca(s))
 					{
 						System.out.println("Peca adicionada");
 						this.repaint();
@@ -162,10 +187,14 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 					{
 						System.out.println("Peca nao adicionado");
 					}
-				//}
+				//}*/
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)
 			{
+				return;
+				}
+			/*
+			}
 				if (construtorTabuleiro.retirarPeca(x, y))
 				{
 					System.out.println("Navio retirado");
@@ -176,7 +205,9 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 					System.out.println("Navio nao retirado");
 				}
 			}
-		}
+		}*/
+		
+	}
 	}
 
 	@Override
@@ -192,22 +223,22 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		int ladoTela = getLadoTela();
 		int dimensao = ladoTela / ladoJogo;
 		
-		if (construtorTabuleiro == null)
+		if (board == null)
 		{
-			g.drawImage(GestorImagens.getImage(TipoImagem.background), 0, 0, ladoTela, ladoTela, null);
+			//g.drawImage(GestorImagens.getImage(TipoImagem.background), 0, 0, ladoTela, ladoTela, null);
 			return;
 		}
 		else
 		{
 			Graphics2D g2d = (Graphics2D) g.create();
-			imprimirTabuleiro(g, g2d, construtorTabuleiro.getPecas(), getWidth()-pnlButtons.getWidth(), getHeight());
-			if (PecaSelecionada != null && !construtorTabuleiro.temPeca(PecaSelecionada) 
+			imprimirTabuleiro(g, g2d,  moves.getBoard(), getWidth()-pnlButtons.getWidth(), getHeight());
+			/*if (PecaSelecionada != null && !construtorTabuleiro.temPeca(PecaSelecionada) 
 					&& ratoX >= 0 && ratoY >= 0 && ratoX < 6 && ratoY < 6)
 			{
 				g2d.setComposite(AlphaComposite.SrcOver.derive(0.5f));
 				Peca p = new Peca(PecaSelecionada, ratoX, ratoY, ativa);
 				imprimirPeca(g2d, p, dimensao);
-			}
+			}*/
 			g2d.dispose();
 		}
 	}
@@ -232,7 +263,11 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 	
 	public void rodar()
 	{
-		ativa = !ativa;
+		
+		if (rotate[player] == 7)
+			rotate[player]=0;
+		else rotate[player]++;
+		
 		repaint();
 	}
 	

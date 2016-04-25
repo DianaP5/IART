@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import logic.Board;
 import logic.ConstrutorTabuleiro;
 import logic.Peca;
 import logic.Peca.TipoPeca;
@@ -37,6 +38,7 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 	
 	private TipoPeca PecaSelecionada = null;
 	private ConstrutorTabuleiro construtorTabuleiro = null;
+	Board board=null;
 	
 	private int ratoX, ratoY;
 	
@@ -188,14 +190,14 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 		else
 		{
 			Graphics2D g2d = (Graphics2D) g.create();
-			imprimirTabuleiro(g, g2d, construtorTabuleiro.getPecas(), getWidth()-pnlButtons.getWidth(), getHeight());
-			if (PecaSelecionada != null && !construtorTabuleiro.temPeca(PecaSelecionada) 
+			imprimirTabuleiro(g, g2d, board, getWidth()-pnlButtons.getWidth(), getHeight());
+			/*if (PecaSelecionada != null && !construtorTabuleiro.temPeca(PecaSelecionada) 
 					&& ratoX >= 0 && ratoY >= 0 && ratoX < 6 && ratoY < 6)
 			{
 				g2d.setComposite(AlphaComposite.SrcOver.derive(0.5f));
 				Peca p = new Peca(PecaSelecionada, ratoX, ratoY, ativa);
 				imprimirPeca(g2d, p, dimensao);
-			}
+			}*/
 			g2d.dispose();
 		}
 	}

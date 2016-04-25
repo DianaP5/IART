@@ -42,13 +42,13 @@ public class GestorImagens {
 		return getInstance().imagens.get(imagem);
 	}
 	
-	public static BufferedImage getImage(TipoPeca peca)
+	public static BufferedImage getImage(int player)
 	{
-		switch(peca)
+		switch(player)
 		{
-			case pecaJogador1:
+			case 0:
 				return getImage(TipoImagem.pecaJogador1);
-			case pecaJogador2:
+			case 1:
 				return getImage(TipoImagem.pecaJogador2);
 			default:
 				return null;

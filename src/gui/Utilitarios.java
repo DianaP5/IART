@@ -10,34 +10,59 @@ import java.awt.image.BufferedImage;
 import java.util.Collection;
 
 import gui.GestorImagens.TipoImagem;
+import logic.Board;
 import logic.Peca;
 
 public class Utilitarios {
-	static void imprimirPeca(Graphics2D g2d, Peca peca, int dimensao)
+	static void imprimirPeca(Graphics2D g2d, int piece,int x1,int y1, int dimensao)
 	{
 		
-		int x = dimensao*(peca.getPosX()+1)+dimensao/8;
-		int y = dimensao*(peca.getPosY()+1)+dimensao/8;
+		int x = dimensao*(x1+1)+dimensao/8;
+		int y = dimensao*(y1+1)+dimensao/8;
 		int height = dimensao-dimensao/4;
-		//int width = dimensao*peca.getPosX()-dimensao/4;
-		int width = dimensao*peca.getComprimento()-dimensao/4;
+		int width = dimensao-dimensao/4;
+		int player=-1;
 		
-		System.out.println(" x:" + peca.getPosX() + " y: " + peca.getPosY() + " height: " + height + " comprimento: " +peca.getComprimento() + " width: " + width);
-		
-		BufferedImage imagem = GestorImagens.getImage(peca.getTipo());
+		System.out.println(" x:" + x + " y: " + y);
+
+		if (piece == 1 || piece == 2 || piece == 3 || piece == 4)
+			player=0;
+		else if (piece == -1 || piece == -2 || piece == -3 || piece == -4)
+			player=0;
+		else player=1;
+			
+		BufferedImage imagem = GestorImagens.getImage(player);
 		//BufferedImage imagem = GestorImagens.getImage(TipoImagem.pecaJogador1);
 		
 		AffineTransform tx = new AffineTransform();
 
 		tx.translate(x, y);
-		if (peca.getAtiva())
+
+		tx.scale(1.0*height/imagem.getHeight(), 1.0*width/imagem.getWidth());
+		
+		/*if (peca.getAtiva())
 			tx.scale(1.0*height/imagem.getHeight(), 1.0*width/imagem.getWidth());
 		else
-			tx.scale(1.0*width/imagem.getWidth(), 1.0*height/imagem.getHeight());
-		if (peca.getAtiva()) {
+			tx.scale(1.0*width/imagem.getWidth(), 1.0*height/imagem.getHeight());*/
+		if (piece > 0 && piece < 9){
 			tx.translate(imagem.getHeight() / 2, - (imagem.getWidth() / 4));
-			tx.rotate(Math.PI / 4, 0, 0);
+			if (piece == 1 || piece == 5)
+				tx.rotate(-Math.PI / 2, 0, 0);
+			else if (piece == 3 || piece == 7)
+				tx.rotate(Math.PI / 2, 0, 0);
+			else if (piece == 4 || piece == 8)
+				tx.rotate(Math.PI, 0, 0);
+		}else if (piece < 0){
+			if (piece == -1 || piece == -5)
+				tx.rotate(-Math.PI / 4, 0, 0);
+			else if (piece == -2 || piece == -6)
+				tx.rotate(Math.PI / 4, 0, 0);
+			else if (piece == -3 || piece == -7)
+				tx.rotate(3*Math.PI / 4, 0, 0);
+			else if (piece == -4 || piece == -8)
+				tx.rotate(-3*Math.PI/4, 0, 0);
 		}
+		
 	    g2d.drawImage(imagem, tx, null);
 	}
 	
@@ -53,15 +78,12 @@ public class Utilitarios {
 	    g.drawString(string, xString, yString);
 	    g2d.dispose();
 	}
-	
 
-	static void imprimirTabuleiro(Graphics g, Graphics2D g2d, Collection<Peca> pecas, int largura, int altura) {
+	static void imprimirTabuleiro(Graphics g, Graphics2D g2d,Board board, int largura, int altura) {
 		final int ladoJogo = 6 + 1;
 		final int dimensao = Math.min(largura,altura) / ladoJogo;
 		
 		BufferedImage mar = GestorImagens.getImage(TipoImagem.mar);
-	//	BufferedImage ceu = GestorImagens.getImage(TipoImagem.ceu);
-		
 		
 		g.drawImage(mar, dimensao, dimensao, 6*dimensao, 6*dimensao, null);
 		
@@ -74,27 +96,10 @@ public class Utilitarios {
 			g.drawLine(dimensao, i*dimensao, ladoJogo*dimensao-1, i*dimensao); //linhas
 			g.drawLine(i*dimensao, dimensao,  i*dimensao, ladoJogo*dimensao-1); //colunas
 		}
-		if (pecas != null) {
-			for (Peca peca : pecas)
-			{
-				imprimirPeca(g2d, peca, dimensao);
-			}
-		}
-		/*if (tentativas != null)
-		{
-			for (int x = 0; x < tentativas.length; x++)
-			{
-				for (int y = 0; y < tentativas.length; y++)
-				{
-					BufferedImage imagem = null;
-					if (tentativas[y][x] == TiposTentativa.Acertou) imagem = GestorImagens.getImage(TipoImagem.fogo);
-					else if (tentativas[y][x] == TiposTentativa.Falhou) imagem = GestorImagens.getImage(TipoImagem.splash);
-					if (imagem != null)
-						g.drawImage(imagem, (x+1)*dimensao, (y+1)*dimensao, dimensao, dimensao, null);
-				}
-			}
-		}*/
-		//g.drawImage(ceu, dimensao, dimensao, 6*dimensao, 6*dimensao, null);
 		
+		for (int i = 0; i < board.getBoardSize(); i++)
+			for (int j = 0; j < board.getBoardSize(); j++)
+				if (board.getBoard()[j][i] != 0)
+					imprimirPeca(g2d,board.getBoard()[j][i],j,i,dimensao);
 	}
 }

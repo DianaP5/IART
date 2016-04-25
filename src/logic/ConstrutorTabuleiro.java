@@ -17,7 +17,7 @@ public class ConstrutorTabuleiro {
 		pecas = new ArrayList<Peca>();
 		ocupados = new boolean[tamanho][tamanho];
 	}
-	
+	/*
 	public boolean retirarPeca(int posX, int posY){
 		if (!ocupados[posY][posX]) return false;
 		for (Peca peca : pecas)
@@ -105,5 +105,5 @@ public class ConstrutorTabuleiro {
 			return new Tabuleiro(pecas, tamanho);
 		}
 		return null;
-	}
+	}*/
 }

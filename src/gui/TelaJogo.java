@@ -28,7 +28,7 @@ public class TelaJogo extends JPanel implements ObservadorJogo{
 	private FrameJogo frameJogo = null;
 	private Jogo jogo = null;
 	
-	private TelaTentativas panelTentativas;
+	//private TelaTentativas panelTentativas;
 	private TelaTabuleiro panelTabuleiro;
 	private JLabel lblEstado;
 	
@@ -53,10 +53,10 @@ public class TelaJogo extends JPanel implements ObservadorJogo{
 		panel1.add(panelTabuleiro);
 		splitPane.setLeftComponent(panel1);
 		
-		JPanel panel2 = new JPanel(new GridBagLayout());
+		/*JPanel panel2 = new JPanel(new GridBagLayout());
 		panelTentativas = new TelaTentativas(this,jogo);
 		panel2.add(panelTentativas);
-		splitPane.setRightComponent(panel2);
+		splitPane.setRightComponent(panel2);*/
 		
 		
 		JPanel panelBotoes = new JPanel();
@@ -87,7 +87,7 @@ public class TelaJogo extends JPanel implements ObservadorJogo{
 		panelBotoes.add(horizontalStrut);
 		panelBotoes.add(btnRecomecar);
 		
-		jogo.adicionarObservador(this);
+		//jogo.adicionarObservador(this);
 	}
 	
 	
@@ -98,64 +98,7 @@ public class TelaJogo extends JPanel implements ObservadorJogo{
 
 
 	public void sair() throws IOException {
-		jogo.terminar();
+		//jogo.terminar();
 		frameJogo.trocarTela(new TelaInicioJogo(frameJogo));
-	}
-
-
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		switch (jogo.getEstado())
-		{
-		case Espera:
-			lblEstado.setText("Estado: Em Espera");
-			break;
-		case EmJogo:
-			lblEstado.setText("Estado: Lançar tiro");
-			break;
-		case Ganho:
-			lblEstado.setText("Estado: Jogo Ganho :)");
-			if (acabou == 2) {
-				JOptionPane.showMessageDialog(frameJogo, "Parabéns! Irá voltar ao menu inicial");
-				try {
-					sair();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			else {
-				acabou++;
-				this.repaint();
-			}
-			break;
-		case Perdido:
-			lblEstado.setText("Estado: Jogo Perdido :(");
-			if (acabou == 2) {
-				JOptionPane.showMessageDialog(frameJogo, "Perdeu o jogo. Irá voltar ao menu inicial");
-				try {
-					sair();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			else {
-				acabou++;
-				this.repaint();
-			}
-			break;
-		case Disconectado:
-			JOptionPane.showMessageDialog(frameJogo, "Conecção perdida!");
-			try {
-				sair();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		default:
-			break;
-		}
 	}
 }

@@ -16,7 +16,7 @@ public class TelaTabuleiro extends TelaQuadrada {
 	public TelaTabuleiro(Jogo jogo) {
 		this.jogo = jogo;
 	}
-	
+	/*
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g.create();
@@ -24,5 +24,5 @@ public class TelaTabuleiro extends TelaQuadrada {
 			Utilitarios.imprimirTabuleiro(g, g2d, jogo.getTabuleiro().getPecas(), getWidth(), getHeight());
 		else Utilitarios.imprimirTabuleiro(g, g2d, null, getWidth(), getHeight());
 		g2d.dispose();
-	}
+	}*/
 }

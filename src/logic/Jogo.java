@@ -1,23 +1,13 @@
 package logic;
-import java.io.IOException;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-
-
-
-
-import logic.Peca;
 //import jogadores.LigacaoInimigo;
 //import Batalha.constantes.Constantes;
-import logic.Jogo.Estado;
 //import Batalha.logica.Jogo.ResultadoTiro;
 //import Batalha.logica.Jogo.TiposTentativa;
 //import Batalha.logica.Jogo.Estado;
-import logic.ObservadorJogo;
 
 public class Jogo<ResultadoMovimento> {
 	
-	
+	/*
 	private Estado estado = Estado.Espera;
 	//private LigacaoInimigo rede;
 	private Tabuleiro tabuleiro;
@@ -126,8 +116,8 @@ public class Jogo<ResultadoMovimento> {
 		else if (resultado == ResultadoMovimento.JogadorPerdeu) this.estado = Estado.Ganho;
 		notificarObservadores();
 		*/
-	}
-	
+	//}
+	/*
 	public boolean verificaPerdeu(){
 		for(Peca peca : tabuleiro.getPecas()){
 			//if(!peca.getDestruido()) return false;
@@ -135,7 +125,7 @@ public class Jogo<ResultadoMovimento> {
 		this.estado = Estado.Perdido;
 		notificarObservadores();
 		return true;
-	}
+	}*/
 
 	
 }
