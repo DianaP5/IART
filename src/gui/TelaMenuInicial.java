@@ -166,6 +166,7 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 		
 		int x = e.getX()/dimensao-1;
 		int y = e.getY()/dimensao-1;
+		repaint();
 		
 	}
 
@@ -199,6 +200,8 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 				imprimirPeca(g2d, p, dimensao);
 			}*/
 			g2d.dispose();
+			
+			
 		}
 	}
 

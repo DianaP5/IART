@@ -21,7 +21,6 @@ public class GestorImagens {
 		pecaJogador2,
 	} 
 	
-	
 	private EnumMap<TipoImagem, BufferedImage> imagens = new EnumMap<TipoImagem, BufferedImage>(TipoImagem.class);
 	
 	private GestorImagens()

@@ -66,6 +66,4 @@ public class FrameJogo extends JFrame{
 		tela.revalidate();
 		tela.repaint();
 	}
-	
-
 }

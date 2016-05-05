@@ -1,5 +1,7 @@
 package gui;
 
+import gui.GestorImagens.TipoImagem;
+
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -7,23 +9,17 @@ import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
 
-import gui.GestorImagens.TipoImagem;
 import logic.Board;
-import logic.Peca;
 
 public class Utilitarios {
 	static void imprimirPeca(Graphics2D g2d, int piece,int x1,int y1, int dimensao)
 	{
-		
-		int x = dimensao*(x1+1)+dimensao/8;
-		int y = dimensao*(y1+1)+dimensao/8;
-		int height = dimensao-dimensao/4;
-		int width = dimensao-dimensao/4;
+		int x = dimensao*(x1+1);
+		int y = dimensao*(y1+1);
 		int player=-1;
 		
-		System.out.println(" x:" + x + " y: " + y);
+		System.out.println("piece: " + piece);
 
 		if (piece == 1 || piece == 2 || piece == 3 || piece == 4)
 			player=0;
@@ -32,22 +28,23 @@ public class Utilitarios {
 		else player=1;
 			
 		BufferedImage imagem = GestorImagens.getImage(player);
-		//BufferedImage imagem = GestorImagens.getImage(TipoImagem.pecaJogador1);
-		
 		AffineTransform tx = new AffineTransform();
-
+			
 		tx.translate(x, y);
 
-		tx.scale(1.0*height/imagem.getHeight(), 1.0*width/imagem.getWidth());
+		tx.scale(1.0*dimensao/imagem.getHeight(), 1.0*dimensao/imagem.getWidth());
 		
 		/*if (peca.getAtiva())
 			tx.scale(1.0*height/imagem.getHeight(), 1.0*width/imagem.getWidth());
 		else
 			tx.scale(1.0*width/imagem.getWidth(), 1.0*height/imagem.getHeight());*/
+		
 		if (piece > 0 && piece < 9){
-			tx.translate(imagem.getHeight() / 2, - (imagem.getWidth() / 4));
-			if (piece == 1 || piece == 5)
+			//tx.translate(imagem.getHeight() / 2, - (imagem.getWidth() / 4));
+			if (piece == 1 || piece == 5){
 				tx.rotate(-Math.PI / 2, 0, 0);
+				tx.translate(imagem.getHeight() / 2, - (imagem.getWidth() / 4));
+			}
 			else if (piece == 3 || piece == 7)
 				tx.rotate(Math.PI / 2, 0, 0);
 			else if (piece == 4 || piece == 8)

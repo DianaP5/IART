@@ -121,8 +121,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		
 	}
 
-
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -168,16 +166,15 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 					
 					if (player == 0)
 						if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
-							moves.placePiece(x, y,player,p1[rotate[player]]);
-							System.out.println(player+" "+rotate[player]+" "+p1[rotate[player]]);
-						}else moves.placePiece(x, y, player, -p1[rotate[player]]);
+							moves.placePiece(x, y,player,p1[rotate[player]]-1);
+						}else moves.placePiece(x, y, player, -p1[rotate[player]]+1);
 					else if (player == 1)
 						if (p2[rotate[player]] > 4 && p2[rotate[player]] < 9)
-							moves.placePiece(x, y,player,p2[rotate[player]]-4);
-						else moves.placePiece(x, y, player, -p2[rotate[player]]+4);
+							moves.placePiece(x, y,player,p2[rotate[player]]-5);
+						else moves.placePiece(x, y, player, -p2[rotate[player]]+5);
 
 					System.out.println(player+" "+rotate[player]+" "+p1[rotate[player]]);
-					moves.getBoard().printBoard();
+					//moves.getBoard().printBoard();
 				/*	if (construtorTabuleiro.adicionarPeca(s))
 					{
 						System.out.println("Peca adicionada");
@@ -208,6 +205,8 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		}*/
 		
 	}
+
+		repaint();
 	}
 
 	@Override
@@ -263,7 +262,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 	
 	public void rodar()
 	{
-		
 		if (rotate[player] == 7)
 			rotate[player]=0;
 		else rotate[player]++;
@@ -293,6 +291,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 			ratoY = y;
 			repaint();
 		}
+		
 	}
 	
 	private int getLadoTela()

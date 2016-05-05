@@ -29,7 +29,7 @@ public class TelaJogo extends JPanel implements ObservadorJogo{
 	private Jogo jogo = null;
 	
 	//private TelaTentativas panelTentativas;
-	private TelaTabuleiro panelTabuleiro;
+	//private TelaTabuleiro panelTabuleiro;
 	private JLabel lblEstado;
 	
 	private int acabou = 0;
@@ -49,8 +49,8 @@ public class TelaJogo extends JPanel implements ObservadorJogo{
 		splitPane.setResizeWeight(0.5);
 		
 		JPanel panel1 = new JPanel(new GridBagLayout());
-		panelTabuleiro = new TelaTabuleiro(jogo);
-		panel1.add(panelTabuleiro);
+	//	panelTabuleiro = new TelaTabuleiro(jogo);
+		//panel1.add(panelTabuleiro);
 		splitPane.setLeftComponent(panel1);
 		
 		/*JPanel panel2 = new JPanel(new GridBagLayout());
