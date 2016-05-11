@@ -27,6 +27,8 @@ public class Utilitarios {
 			player=0;
 		else player=1;
 			
+		System.out.println("player: " + player);
+		
 		BufferedImage imagem = GestorImagens.getImage(player);
 		AffineTransform tx = new AffineTransform();
 			
@@ -44,20 +46,24 @@ public class Utilitarios {
 			if (piece == 1 || piece == 5){
 				tx.rotate(-Math.PI / 2, 0, 0);
 				tx.translate(imagem.getHeight() / 2, - (imagem.getWidth() / 4));
-			}
-			else if (piece == 3 || piece == 7)
+			}else if (piece == 3 || piece == 7)
 				tx.rotate(Math.PI / 2, 0, 0);
 			else if (piece == 4 || piece == 8)
 				tx.rotate(Math.PI, 0, 0);
 		}else if (piece < 0){
-			if (piece == -1 || piece == -5)
+			if (piece == -1 || piece == -5){
+				tx.translate(-imagem.getHeight()/6 ,imagem.getHeight()/2);
 				tx.rotate(-Math.PI / 4, 0, 0);
-			else if (piece == -2 || piece == -6)
+			}else if (piece == -2 || piece == -6){
+				tx.translate(imagem.getHeight() / 2,-imagem.getHeight() / 6);
 				tx.rotate(Math.PI / 4, 0, 0);
-			else if (piece == -3 || piece == -7)
+			} else if (piece == -3 || piece == -7){
+				tx.translate(imagem.getHeight()*1.25,imagem.getHeight() / 2);
 				tx.rotate(3*Math.PI / 4, 0, 0);
-			else if (piece == -4 || piece == -8)
+			}else if (piece == -4 || piece == -8){
+				tx.translate(imagem.getHeight() / 2,imagem.getHeight()*1.25);
 				tx.rotate(-3*Math.PI/4, 0, 0);
+			}
 		}
 		
 	    g2d.drawImage(imagem, tx, null);

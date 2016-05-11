@@ -44,7 +44,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 	private int ratoX, ratoY;
 	private Moves moves=new Moves();
 	private int player=-1;
-	private int[] rotate={0,0};
+	private int[] rotate={1,1};
 	int[] p1={2,-2,3,-3,4,-4,1,-1};
 	int[] p2={6,-6,7,-7,8,-8,5,-5};
 	
@@ -162,17 +162,17 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 		else if (x >= 0 && y >= 0 && x < 6 && y < 6)
 		{
 			if (e.getButton() == MouseEvent.BUTTON1) {
-				System.out.println("Valid click");
+				System.out.println("Valid click: "+rotate[player]);
 					
-					if (player == 0)
-						if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
-							moves.placePiece(x, y,player,p1[rotate[player]]-1);
-						}else moves.placePiece(x, y, player, -p1[rotate[player]]+1);
-					else if (player == 1)
-						if (p2[rotate[player]] > 4 && p2[rotate[player]] < 9)
-							moves.placePiece(x, y,player,p2[rotate[player]]-5);
-						else moves.placePiece(x, y, player, -p2[rotate[player]]+5);
-
+					if (player == 0){	
+						if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0){
+							moves.placePiece(x, y, player, -p1[rotate[player]]+1);
+							System.out.println("CENAS: "+p1[rotate[player]]);
+						}
+					}else if (player == 1)
+						if (p2[rotate[player]] >-9 && p2[rotate[player]] < -4)
+							moves.placePiece(x, y, player, -p2[rotate[player]]+5);
+					
 					System.out.println(player+" "+rotate[player]+" "+p1[rotate[player]]);
 					//moves.getBoard().printBoard();
 				/*	if (construtorTabuleiro.adicionarPeca(s))
@@ -262,9 +262,14 @@ public class TelaInicioJogo extends JPanel implements MouseListener, KeyListener
 	
 	public void rodar()
 	{
+		int rotates=rotate[player];
+		
+		
 		if (rotate[player] == 7)
 			rotate[player]=0;
 		else rotate[player]++;
+		
+		System.out.println("rodar: antes: "+rotates+" depois: "+rotate[player]);
 		
 		repaint();
 	}

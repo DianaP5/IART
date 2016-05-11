@@ -3,6 +3,8 @@ package logic;
 public class Moves {
 
 	private Board board;
+	private Boolean blackFirstMove=true;
+	private Boolean whiteFirstMove=true;
 	
 	public Board getBoard(){
 		return board;
@@ -13,17 +15,24 @@ public class Moves {
 	}
 	
 	public Boolean placePiece(int x,int y,int player,int direction){
-
-		/*if (!board.slidable(player))
-			return false;*/
+		
+		if ((!blackFirstMove && player == 0 ) || (!whiteFirstMove && player == 1)){
+			System.out.println("olaaaaaaaaaaaaaaaaaa");
+			if (!board.slidable(player))
+				return false;
+		}else if (player == 0)
+				blackFirstMove=false;
+		else if (player == 1)
+				whiteFirstMove=false;
+		
+		System.out.println("PASOUSUSUSUSUSU");
 		
 		if (board.isUsed(x,y))
 			return false;
-		System.out.println("cena1");
-		if (!board.checkValidPlace(x,y,player,direction))
+		
+		if (!board.checkValidPlace(x,y,player,direction,0))
 			return false;
 
-		System.out.println("cena1");
 		return true;
 	}
 	
@@ -37,7 +46,7 @@ public class Moves {
 		if (!board.checkValidSlide(x,y,x1,y1,player))
 			return false;
 
-		if (!board.checkValidPlace(x,y,player,direction))
+		if (!board.checkValidPlace(x,y,player,direction,1))
 			return false;
 		
 		board.erasePiece(x,y);
