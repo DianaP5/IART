@@ -122,22 +122,25 @@ public class Board {
 	}
 
 	public Boolean checkPlayer(int x, int y, int player) {
-		// player=0 branco player=1 preto
+		// player=0 preto player=1 branco
 		
 		//ver inativas também
 		
-		int delta1 = 0, delta2 = 5;
+		int delta1 = 0, delta2 = 5, delta3 = -5, delta4 = 0;
 
 		if (player == 1) {
 			delta1 = 4;
 			delta2 = 9;
+			delta3 = -9;
+			delta4 = -4;
 		}
 
 		if (board[x][y] > delta1 && board[x][y] < delta2)
 			return true;
+		else if (board[x][y] > delta3 && board[x][y] < delta4)
+			return true;
 
 		return false;
-
 	}
 
 	public Boolean checkValidSlide(int x, int y, int x1, int y1, int player) {
@@ -344,7 +347,7 @@ public class Board {
 
 		return true;
 	}
-
+	
 	public void erasePiece(int x, int y) {
 		board[x][y]=0;
 	}

@@ -100,6 +100,9 @@ public class Utilitarios {
 			g.drawLine(i*dimensao, dimensao,  i*dimensao, ladoJogo*dimensao-1); //colunas
 		}
 		
+		if (board == null)
+			return;
+		
 		for (int i = 0; i < board.getBoardSize(); i++)
 			for (int j = 0; j < board.getBoardSize(); j++)
 				if (board.getBoard()[j][i] != 0)

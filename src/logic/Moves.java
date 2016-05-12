@@ -16,8 +16,8 @@ public class Moves {
 	
 	public Boolean placePiece(int x,int y,int player,int direction){
 		
+		//checks first move for each player
 		if ((!blackFirstMove && player == 0 ) || (!whiteFirstMove && player == 1)){
-			System.out.println("olaaaaaaaaaaaaaaaaaa");
 			if (!board.slidable(player))
 				return false;
 		}else if (player == 0)
@@ -25,7 +25,7 @@ public class Moves {
 		else if (player == 1)
 				whiteFirstMove=false;
 		
-		System.out.println("PASOUSUSUSUSUSU");
+		System.out.println("PASOUSUSUSUSUSU:"+direction);
 		
 		if (board.isUsed(x,y))
 			return false;
@@ -53,5 +53,15 @@ public class Moves {
 				
 		return true;
 		
+	}
+
+	public Boolean removePiece(int x, int y, int player) {
+		
+		if (!board.checkPlayer(x, y, player))
+			return false;
+
+		board.erasePiece(x,y);
+		
+		return true;
 	}
 }
