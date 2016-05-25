@@ -362,9 +362,10 @@ public class Board {
 			for (int k = 0; k < rules.length; k++)
 				if (rules[k] == 2)// && direction == k) {
 					if (k == 0 && direction == 3 || k == 1 && direction == 1 || k == 2 && direction == 2 || k == 3 && direction == 0){
-						if (this.placePiece(x, y, false, player, piece) && slide == 1)
+						if (this.placePiece(x, y, false, player, piece) && slide == 1){
 							this.setBonusMove(player);
-						else return this.placePiece(x, y, false, player, piece);
+							return true;
+						}else return this.placePiece(x, y, false, player, piece);
 				}
 				//}
 		System.out.println("dir: "+direction);
@@ -379,9 +380,10 @@ public class Board {
 		if (rules[0] <= 1 && rules[1] <= 1 && rules[2] <= 1 && rules[3] <= 1) {
 			return this.placePiece(x, y, true, player, piece);
 		}else if (rules[0] != 2 && rules[1] != 2 && rules[2] != 2 && rules[3] != 2){
-			if (this.placePiece(x, y, false, player, piece) && slide == 1)
+			if (this.placePiece(x, y, false, player, piece) && slide == 1){
 				this.setBonusMove(player);
-			else return this.placePiece(x, y, false, player, piece);
+				return true;
+			}else return this.placePiece(x, y, false, player, piece);
 		}
 			/*else {
 		}

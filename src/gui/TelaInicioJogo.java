@@ -45,10 +45,12 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 	private int[] rotate = { 1, 1 };
 	int[] p1 = { 2, -2, 3, -3, 4, -4, 1, -1 };
 	int[] p2 = { 6, -6, 7, -7, 8, -8, 5, -5 };
-	int[] pieces={10,10};
 	
 	private boolean isSliding=false;
-	int[] sliding={-1,-1,0};
+	private boolean activating=false;
+	private boolean pivoting=false;
+	int[] sliding={-1,-1,0,-1};
+	String bonus="";
 	FrameJogo frameJogo;
 	
 	public void novoJogo(Jogo jogo) {
@@ -162,24 +164,25 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 
 			this.repaint();
 		} else if (x >= 0 && y >= 0 && x < 6 && y < 6) {
-			System.out.println("N_PIECES: "+this.pieces[0]+" "+this.pieces[1]);
-			if (e.getButton() == MouseEvent.BUTTON1 && !this.isSliding) {
-				if (player == 0 && this.pieces[0] > 0) {
-					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0) 
+			System.out.println("N_PIECES: "+this.moves.pieces[0]+" "+this.moves.pieces[1]);
+			if (e.getButton() == MouseEvent.BUTTON1 && !this.isSliding && !this.activating && !this.pivoting && !bonus.equals("Slide")) {
+				if (player == 0 && this.moves.pieces[player] > 0) {
+					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0) {
 						if (moves.placePiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]]))
-							this.pieces[player]--;
-					else if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
+							this.moves.pieces[player]--;
+					}else if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
 						if(moves.placePiece(x, y, player, p1[rotate[player]]- 1,p1[rotate[player]]))
-							this.pieces[player]--;
+							this.moves.pieces[player]--;
 					}
-				} else if (player == 1 && this.pieces[1] > 0)
-					if (p2[rotate[player]] > -9 && p2[rotate[player]] < -4)
+				} else if (player == 1 && this.moves.pieces[player] > 0)
+					if (p2[rotate[player]] > -9 && p2[rotate[player]] < -4){
 						if(moves.placePiece(x, y, player, -p2[rotate[player]] - 5,p2[rotate[player]]))
-							this.pieces[player]--;
-					else if (p2[rotate[player]] > 4 && p2[rotate[player]] < 9)
+							this.moves.pieces[player]--;
+					}else if (p2[rotate[player]] > 4 && p2[rotate[player]] < 9){
 						if(moves.placePiece(x, y, player, p2[rotate[player]] - 5,p2[rotate[player]]))
-							this.pieces[player]--;
-			} else if (e.getButton() == MouseEvent.BUTTON1 && this.isSliding) {
+							this.moves.pieces[player]--;
+					}
+				} else if (e.getButton() == MouseEvent.BUTTON1 && this.isSliding) {
 				if (player == 0) {
 					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0) {
 						if (moves.slidePiece(this.sliding[0], this.sliding[1], x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]]))
@@ -187,6 +190,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					}else if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5)
 						if (moves.slidePiece(this.sliding[0], this.sliding[1], x, y, player, p1[rotate[player]] - 1,p1[rotate[player]]))
 							this.isSliding=false;
+					
 					if (moves.getBoard().getBonusMove() > -1){
 						Object[] possibilities = {"Place", "Slide", "Activate","Pick up","Pivot","End turn"};
 						String s = (String)JOptionPane.showInputDialog(
@@ -197,8 +201,11 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						                    null,
 						                    possibilities,
 						                    "End turn");
-						System.out.println(s);
-						moves.getBoard().setBonusMove(-1);
+						bonus=s;
+						if (bonus.equals("End turn")){
+							bonus="";
+							moves.getBoard().setBonusMove(-1);
+						}
 					}
 				} else if (player == 1)
 					if (p2[rotate[player]] > -9 && p2[rotate[player]] < -4){
@@ -207,6 +214,93 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					}else if (p2[rotate[player]] > 4 && p2[rotate[player]] < 9)
 						if (moves.slidePiece(this.sliding[0], this.sliding[1], x, y, player, p2[rotate[player]] - 5,p2[rotate[player]]))
 							this.isSliding=false;
+			}else  if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && bonus.equals("Pick up")){
+				moves.pickUpPiece(x, y, player);
+			}if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && bonus.equals("Pivot")){
+				this.sliding[0]=x;
+				this.sliding[1]=y;
+				this.sliding[2]=board.getBoard()[x][y];
+				
+				if (!board.checkPlayer(x, y, player))
+					return;
+				
+				if (!board.checkActivePiece(x,y,player))
+					return;
+				
+				moves.removePiece(x, y, player);
+				this.pivoting=true;
+				
+				System.out.println("cenas1");
+				bonus="";
+				
+			}else if (e.getButton() == MouseEvent.BUTTON1 && this.pivoting) {
+				System.out.println("MERDA PIVOTING");
+				if (player == 0) {
+					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0){
+						 if(!moves.pivotPiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]]))
+							 board.getBoard()[this.sliding[0]][this.sliding[1]]=this.sliding[2];
+					}else if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
+						 if (!moves.pivotPiece(x, y, player, p1[rotate[player]]- 1,p1[rotate[player]]))
+						 	board.getBoard()[this.sliding[0]][this.sliding[1]]=this.sliding[2];
+					}
+				} else if (player == 1)
+					if (p2[rotate[player]] > -9 && p2[rotate[player]] < -4){
+						 if (!moves.pivotPiece(x, y, player, -p2[rotate[player]] - 5,p2[rotate[player]]))
+							 board.getBoard()[this.sliding[0]][this.sliding[1]]=this.sliding[2];
+					}else if (p2[rotate[player]] > 4 && p2[rotate[player]] < 9)
+						 if(!moves.pivotPiece(x, y, player, p2[rotate[player]] - 5,p2[rotate[player]]))
+							 board.getBoard()[this.sliding[0]][this.sliding[1]]=this.sliding[2];
+				
+				this.sliding[0]=-1;
+				this.sliding[1]=-1;
+				this.sliding[2]=0;
+				this.sliding[3]=-1;
+				this.pivoting=false;
+				
+			}else if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && !this.activating && bonus.equals("Activate")){
+				this.sliding[0]=x;
+				this.sliding[1]=y;
+				this.sliding[2]=board.getBoard()[x][y];
+				
+				if (!board.checkPlayer(x, y, player))
+					return;
+				
+				if (board.checkActivePiece(x,y,player))
+					return;
+				
+				moves.removePiece(x, y, player);
+				this.activating=true;
+				
+				System.out.println("cenas1");
+				bonus="";
+				
+			}else if (e.getButton() == MouseEvent.BUTTON1 && this.activating) {
+				System.out.println("MERDA");
+				if (player == 0) {
+					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0){
+						 if(!moves.activatePiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]]))
+							 board.getBoard()[this.sliding[0]][this.sliding[1]]=this.sliding[2];
+						 System.out.println("cenas2");
+					}else if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
+						 if (!moves.activatePiece(x, y, player, p1[rotate[player]]- 1,p1[rotate[player]])){
+						 	board.getBoard()[this.sliding[0]][this.sliding[1]]=this.sliding[2];
+						 System.out.println("cenas3");
+						 }
+					}
+				} else if (player == 1)
+					if (p2[rotate[player]] > -9 && p2[rotate[player]] < -4)
+						 if (!moves.activatePiece(x, y, player, -p2[rotate[player]] - 5,p2[rotate[player]]))
+							 board.getBoard()[this.sliding[0]][this.sliding[1]]=this.sliding[2];
+					else if (p2[rotate[player]] > 4 && p2[rotate[player]] < 9)
+						 if(!moves.activatePiece(x, y, player, p2[rotate[player]] - 5,p2[rotate[player]]))
+							 board.getBoard()[this.sliding[0]][this.sliding[1]]=this.sliding[2];
+				
+				this.sliding[0]=-1;
+				this.sliding[1]=-1;
+				this.sliding[2]=0;
+				this.sliding[3]=-1;
+				this.activating=false;
+				
 			} else if (e.getButton() == MouseEvent.BUTTON3 && !this.isSliding) {
 				this.isSliding=true;
 				if (board.checkActivePiece(x,y,player)){
@@ -220,6 +314,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				this.sliding[0]=-1;
 				this.sliding[1]=-1;
 				this.sliding[2]=0;
+				this.sliding[3]=-1;
 				this.isSliding=false;
 			}
 		}
@@ -243,10 +338,23 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		imprimirTabuleiro(g, g2d, moves.getBoard(),
 				getWidth() - pnlButtons.getWidth(), getHeight());
 		
-		if (this.isSliding){
+		if (this.isSliding || this.activating || this.pivoting){
 			g2d.setComposite(AlphaComposite.SrcOver.derive(0.5f));
-			if (this.sliding[2] != 0)
-				imprimirPeca(g2d,this.sliding[2],ratoX,ratoY, dimensao);
+			
+			if (this.sliding[2] != 0){
+				if (this.sliding[3] < 0){
+					for (int i=0; i < this.p1.length; i++){
+						if (this.p1[i] == this.sliding[2]){
+							this.rotate[player]=i;
+							this.sliding[3]=i;
+						}
+					}
+				}
+				
+				if (player == 0)
+					imprimirPeca(g2d,p1[this.rotate[player]],ratoX,ratoY, dimensao);
+				else imprimirPeca(g2d,p2[this.rotate[player]],ratoX,ratoY, dimensao);
+			}
 		}
 		
 		g2d.dispose();

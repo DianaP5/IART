@@ -5,7 +5,8 @@ public class Moves {
 	private Board board;
 	private Boolean blackFirstMove=true;
 	private Boolean whiteFirstMove=true;
-	private int bonusMove=-1;
+	public int[] pieces={10,10};
+	public int bonus=-1;
 	
 	public Board getBoard(){
 		return board;
@@ -31,19 +32,23 @@ public class Moves {
 		
 		if (!board.checkValidPlace(x,y,player,direction,piece,0))
 			return false;
-
+		
+		getBoard().setBonusMove(-1);
+		
 		return true;
 	}
 	
 	public Boolean slidePiece(int x, int y,int x1,int y1, int player,int direction,int piece){
 		System.out.println("SLDIINGS");
+		
+		int tempBonus=getBoard().getBonusMove();;
 		/*if (!board.checkActivePiece(x,y,player))
 			return false;
 		System.out.println("Active");*/
 		
 		//board.pivotPiece(x,y,player); //facultativo
 		
-		if (x == x1 && x1 == y1)
+		if (x == x1 && y == y1)
 			return false;
 		
 		if (!board.checkValidSlide(x,y,x1,y1,player))
@@ -53,6 +58,9 @@ public class Moves {
 		
 		if (!board.checkValidPlace(x1,y1,player,direction,piece,1))
 			return false;
+		
+		if (tempBonus > -1)
+			getBoard().setBonusMove(-1);
 		
 		System.out.println("ValidPlace");
 		
@@ -67,30 +75,63 @@ public class Moves {
 
 		board.erasePiece(x,y);
 		
+		getBoard().setBonusMove(-1);
+		
 		return true;
 	}
 	
-	//TODO
-	public Boolean activatePiece(int x,int y, int player){
+	public Boolean pickUpPiece(int x, int y, int player) {
+		
 		if (!board.checkPlayer(x, y, player))
 			return false;
+
+		board.erasePiece(x,y);
 		
+		this.pieces[player]++;
 		
-		return false;
+		getBoard().setBonusMove(-1);
+		
+		return true;
 	}
-	//TODO
-	public Boolean pickUpPiece(int x,int y, int player){
-		if (!board.checkPlayer(x, y, player))
+	
+	public Boolean activatePiece(int x,int y, int player,int direction,int piece){
+		/*if (!board.checkPlayer(x, y, player))
 			return false;
 		
+		if (board.checkActivePiece(x,y,player))
+			return false;
+		*/
+		if (!board.checkValidPlace(x,y,player,direction,piece,0))
+			return false;
 		
-		return false;
+		System.out.println("valid place");
+		
+		if (!board.checkActivePiece(x,y,player))
+			return false;
+		
+		System.out.println("active place");
+		
+		getBoard().setBonusMove(-1);
+		
+		return true;
 	}
-	//TODO
-	public Boolean pivotPiece(int x,int y, int player){
-		if (!board.checkPlayer(x, y, player))
+	 
+	public Boolean pivotPiece(int x,int y, int player,int direction,int piece){
+		
+		System.out.println("pivoting");
+		
+		if (!board.checkValidPlace(x,y,player,direction,piece,0))
 			return false;
 		
-		return false;
+		System.out.println("valid place");
+		
+		if (!board.checkActivePiece(x,y,player))
+			return false;
+		
+		System.out.println("active place");
+		
+		getBoard().setBonusMove(-1);
+		
+		return true;
 	}
 }
