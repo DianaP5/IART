@@ -19,7 +19,7 @@ public class Utilitarios {
 		int y = dimensao*(y1+1);
 		int player=-1;
 		
-		System.out.println("piece: " + piece);
+		//System.out.println("piece: " + piece);
 
 		if (piece == 1 || piece == 2 || piece == 3 || piece == 4)
 			player=0;
@@ -27,7 +27,7 @@ public class Utilitarios {
 			player=0;
 		else player=1;
 			
-		System.out.println("player: " + player);
+		//System.out.println("player: " + player);
 		
 		BufferedImage imagem = GestorImagens.getImage(player);
 		AffineTransform tx = new AffineTransform();
@@ -44,12 +44,17 @@ public class Utilitarios {
 		if (piece > 0 && piece < 9){
 			//tx.translate(imagem.getHeight() / 2, - (imagem.getWidth() / 4));
 			if (piece == 1 || piece == 5){
+				tx.translate(0,imagem.getHeight());
 				tx.rotate(-Math.PI / 2, 0, 0);
-				tx.translate(imagem.getHeight() / 2, - (imagem.getWidth() / 4));
-			}else if (piece == 3 || piece == 7)
+			}else if (piece == 3 || piece == 7){
+				tx.translate(imagem.getHeight() ,0);
 				tx.rotate(Math.PI / 2, 0, 0);
-			else if (piece == 4 || piece == 8)
+			}
+			else if (piece == 4 || piece == 8){
+				tx.translate(imagem.getHeight() ,imagem.getHeight());
 				tx.rotate(Math.PI, 0, 0);
+				
+			}
 		}else if (piece < 0){
 			if (piece == -1 || piece == -5){
 				tx.translate(-imagem.getHeight()/6 ,imagem.getHeight()/2);

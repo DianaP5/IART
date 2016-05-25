@@ -6,6 +6,7 @@ public class Board {
 
 	private int boardSize;
 	private int[][] board;
+	private int bonusMove=-1;
 
 	public Board() {
 		this.boardSize = 6;
@@ -52,14 +53,14 @@ public class Board {
 	}
 
 	public Boolean checkActivePiece(int x, int y,int player) {
-		int delta1 = 0, delta2 = 5;
+		int delta1 = 0, delta2 = -5;
 
 		if (player == 1) {
-			delta1 = 4;
-			delta2 = 9;
+			delta1 = -4;
+			delta2 = -9;
 		}
 		
-		if (board[x][y] > delta1 && board[x][y] < delta2)
+		if (board[x][y] > delta2 && board[x][y] < delta1)
 			return true;
 		
 		return false;
@@ -79,7 +80,7 @@ public class Board {
 			for (int j = 0; j < this.getBoardSize(); j++)
 				if (board[j][i] > delta1 && board[j][i] < delta2)
 					if (checkOrtogonalSpaces(j, i)){
-						System.out.println("iuahfoqihefoewiho");
+						System.out.println("SLIDABLE");
 						return true;
 					}
 		}
@@ -110,7 +111,6 @@ public class Board {
 					if (board[x][y - 1] == 0)
 						return true;
 			}
-		System.out.println("TESTESTE");
 		return false;
 	}
 
@@ -148,72 +148,75 @@ public class Board {
 		if (x == x1) {
 			if (y1 - y > 0) {
 				ArrayList<Integer> a1 = new ArrayList<Integer>();
+				ArrayList<Integer> a2 = new ArrayList<Integer>();
 				for (int i = y + 1; i < y1; i++) {
 					if (x - 1 >= 0) {
 						a1.add(x - 1);
 						a1.add(i);
 					}
 					if (x + 1 <= boardSize) {
-						a1.add(x + 1);
-						a1.add(i);
+						a2.add(x + 1);
+						a2.add(i);
 					}
 					if (board[x][i] != 0)
 						return false;
 				}
-				this.checkDeactivationSlide(a1, 0);
+				this.checkDeactivationSlide(a1,a2, 2);
 			} else {
 				ArrayList<Integer> a1 = new ArrayList<Integer>();
+				ArrayList<Integer> a2 = new ArrayList<Integer>();
 				for (int i = y1; i < y - 1; i++) {
 					if (x - 1 >= 0) {
 						a1.add(x - 1);
 						a1.add(i);
 					}
 					if (x + 1 <= boardSize) {
-						a1.add(x + 1);
-						a1.add(i);
+						a2.add(x + 1);
+						a2.add(i);
 					}
 					if (board[x][i] != 0)
 						return false;
 
-					this.checkDeactivationSlide(a1, 1);
+					this.checkDeactivationSlide(a1,a2, 0);
 				}
 			}
 		} else if (y == y1) {
 			if (x1 - x > 0) {
 				ArrayList<Integer> a1 = new ArrayList<Integer>();
-
-				for (int i = x + 1; x < x1; i++) {
+				ArrayList<Integer> a2 = new ArrayList<Integer>();
+				for (int i = x + 1; i < x1; i++) {
 					if (y - 1 >= 0) {
 						a1.add(i);
 						a1.add(y - 1);
 					}
 					if (y + 1 <= boardSize) {
-						a1.add(i);
-						a1.add(y + 1);
+						a2.add(i);
+						a2.add(y + 1);
 					}
+					System.out.println(i+" "+y+" "+x+" "+x1);
 					if (board[i][y] != 0)
 						return false;
 
-					this.checkDeactivationSlide(a1, 2);
+					this.checkDeactivationSlide(a1,a2, 1);
 
 				}
 			} else {
 				ArrayList<Integer> a1 = new ArrayList<Integer>();
-
+				ArrayList<Integer> a2 = new ArrayList<Integer>();
 				for (int i = x1; i < x - 1; i++) {
 					if (y - 1 >= 0) {
 						a1.add(i);
 						a1.add(y - 1);
 					}
 					if (y + 1 <= boardSize) {
-						a1.add(i);
-						a1.add(y + 1);
+						a2.add(i);
+						a2.add(y + 1);
 					}
 
 					if (board[i][y] != 0)
 						return false;
 
-					this.checkDeactivationSlide(a1, 3);
+					this.checkDeactivationSlide(a1,a2, 3);
 				}
 			}
 		} else
@@ -223,11 +226,63 @@ public class Board {
 		return true;
 	}
 
-	private void checkDeactivationSlide(ArrayList<Integer> a1, int direction) {
-
+	private void checkDeactivationSlide(ArrayList<Integer> a1,ArrayList<Integer> a2, int direction) {
+		for (int i=0; i < a1.size()-1;i=i+2)
+			if (direction == 0){
+				if (board[a1.get(i)][a1.get(i+1)] < 0){
+					int piece=-board[a1.get(i)][a1.get(i+1)];
+					board[a1.get(i)][a1.get(i+1)]=piece;
+				}
+			}else if (direction == 1){
+				if (board[a1.get(i)][a1.get(i+1)] < 0){
+					int piece=-board[a1.get(i)][a1.get(i+1)];
+					board[a1.get(i)][a1.get(i+1)]=piece;
+				}
+			}else if (direction == 2){
+				if (board[a1.get(i)][a1.get(i+1)] < 0){
+					int piece=-board[a1.get(i)][a1.get(i+1)]+1;
+					if (piece == 5)
+						piece=1;
+					board[a1.get(i)][a1.get(i+1)]=piece;
+				}
+			}else if (direction == 3){
+				if (board[a1.get(i)][a1.get(i+1)] < 0){
+					int piece=-board[a1.get(i)][a1.get(i+1)]+1;
+					if (piece == 5)
+						piece=1;
+					board[a1.get(i)][a1.get(i+1)]=piece;
+				}
+			}
+		
+		for (int i=0; i < a2.size()-1;i=i+2)
+			if (direction == 0){
+				if (board[a2.get(i)][a2.get(i+1)] < 0){
+					int piece=-board[a2.get(i)][a2.get(i+1)]+1;
+					if (piece == 5)
+						piece=1;
+					board[a2.get(i)][a2.get(i+1)]=piece;
+				}
+			}else if (direction == 1){
+				if (board[a2.get(i)][a2.get(i+1)] < 0){
+					int piece=-board[a2.get(i)][a2.get(i+1)]+1;
+					if (piece == 5)
+						piece=1;
+					board[a2.get(i)][a2.get(i+1)]=piece;
+				}
+			}else if (direction == 2){
+				if (board[a2.get(i)][a2.get(i+1)] < 0){
+					int piece=-board[a2.get(i)][a2.get(i+1)];
+					board[a2.get(i)][a2.get(i+1)]=piece;
+				}
+			}else if (direction == 3){
+				if (board[a2.get(i)][a2.get(i+1)] < 0){
+					int piece=-board[a2.get(i)][a2.get(i+1)];
+					board[a2.get(i)][a2.get(i+1)]=piece;
+				}
+			}
 	}
 
-	public Boolean checkValidPlace(int x, int y, int player, int direction,int slide) {
+	public Boolean checkValidPlace(int x, int y, int player, int direction,int piece,int slide) {
 
 		Boolean[] validaty = { true, true, true, true };
 		int[] rules = { -1, -1, -1, -1 };
@@ -243,12 +298,16 @@ public class Board {
 		for (int i = 0; i < validaty.length; i++)
 			if (validaty[i]) {
 				if (i == 0) {
+					//check if has piece
 					if (board[x - 1][y] == 0)
 						rules[i] = 0;
+					//if piece is inside and radial inside direction
 					else if (board[x - 1][y] == 2 || board[x - 1][y] == 6)
 						rules[i] = 1;
+					//if piece is active
 					else if (board[x - 1][y] < 0)
 						rules[i] = 2;
+					//if piece is inactive and non radial direction
 					else
 						rules[i] = 3;
 				}
@@ -286,53 +345,80 @@ public class Board {
 		
 		System.out.println(rules[0]+" "+rules[1]+" "+rules[2]+" "+rules[3]);
 		
+		//makes sense? TODO
 		if (!validaty[0] && !validaty[1] && !validaty[2] && !validaty[3])
 			return false;
 
 		int activeCount = 0;
 
 		for (int k = 0; k < rules.length; k++)
-			if (rules[k] == 3)
+			if (rules[k] == 2)
 				activeCount++;
-
+		System.out.println("dir: "+direction);
+		//if more than one piece if active, cannot place
 		if (activeCount > 1)
 			return false;
 		else
 			for (int k = 0; k < rules.length; k++)
-				if (rules[k] == 3 && direction == k) {
-					this.placePiece(x, y, false, player, direction);
-					return true;
+				if (rules[k] == 2)// && direction == k) {
+					if (k == 0 && direction == 3 || k == 1 && direction == 1 || k == 2 && direction == 2 || k == 3 && direction == 0){
+						if (this.placePiece(x, y, false, player, piece) && slide == 1)
+							this.setBonusMove(player);
+						else return this.placePiece(x, y, false, player, piece);
 				}
+				//}
+		System.out.println("dir: "+direction);
 		
-		if (slide == 1){
+		/*if (slide == 1){
 			if (rules[0] <= 1 && rules[1] <= 1 && rules[2] <= 1 && rules[3] <= 1) {
-				this.placePiece(x, y, false, player, direction);
+				this.placePiece(x, y, true, player, piece);
 				return true;
 			}
-		}
+		}*/
 		
-		if (rules[0] < 1 && rules[1] < 1 && rules[2] < 1 && rules[3] < 1) {
-			this.placePiece(x, y, true, player, direction);
-			return true;
-		} else {
+		if (rules[0] <= 1 && rules[1] <= 1 && rules[2] <= 1 && rules[3] <= 1) {
+			return this.placePiece(x, y, true, player, piece);
+		}else if (rules[0] != 2 && rules[1] != 2 && rules[2] != 2 && rules[3] != 2){
+			if (this.placePiece(x, y, false, player, piece) && slide == 1)
+				this.setBonusMove(player);
+			else return this.placePiece(x, y, false, player, piece);
+		}
+			/*else {
+		}
+			this.placePiece(x, y, false, player, piece);
+			//check this TODO
 			for (int g = 0; g < rules.length; g++)
 				if (rules[g] == 2 && slide == 1) {
-					this.placePiece(x, y, false, player, direction);
+					this.placePiece(x, y, false, player, piece);
 					return true;
 				}
-		}
+		}*/
 		
 		return false;
 	}
 
 	public Boolean placePiece(int x, int y, Boolean state, int player,
-			int direction) {
-		System.out.println(player+" "+board[x][y]+" "+direction);
-		if (player == 0) {
+			int piece) {
+		System.out.println(state+" "+piece);
+		
+		if (state)
+			if (piece > 0)
+				return false;
+			else board[x][y]=piece;
+		else{
+			if (piece < 0)
+				return false;
+			else board[x][y]=piece;
+		}
+		/*if (player == 0) {
+			board[x][y]=piece;
+			/*
 			if (!state)
 				board[x][y] = direction + 1;
 			else{
 				board[x][y] = -direction+ 1;
+				
+				
 				System.out.println("wefkjwebfwefweof: "+board[x][y]);
 				}
 			
@@ -344,11 +430,19 @@ public class Board {
 				board[x][y] = -(direction + 1 + 4);
 		} else
 			return false;
-
+*/
 		return true;
 	}
 	
 	public void erasePiece(int x, int y) {
 		board[x][y]=0;
+	}
+
+	public int getBonusMove() {
+		return bonusMove;
+	}
+
+	public void setBonusMove(int bonusMove) {
+		this.bonusMove = bonusMove;
 	}
 }

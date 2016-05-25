@@ -30,7 +30,6 @@ public class GestorImagens {
 			imagens.put(TipoImagem.background,ImageIO.read(getClass().getResource("/fundo_tixel.png")));
 			imagens.put(TipoImagem.pecaJogador1,ImageIO.read(getClass().getResource("/Jogador1.png")));
 			imagens.put(TipoImagem.pecaJogador2,ImageIO.read(getClass().getResource("/Jogador2.png")));
-			//imagens.put(TipoImagem.Nomejogo,ImageIO.read(getClass().getResource("/Tixel_Jogo.png")));
 		} catch (IOException e) {
 			e.printStackTrace(); 
 		}
