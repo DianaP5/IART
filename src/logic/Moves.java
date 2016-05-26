@@ -51,13 +51,21 @@ public class Moves {
 		if (x == x1 && y == y1)
 			return false;
 		
+		int[][] tempBoard = new int[6][6];
+		
+		for (int i = 0; i < 6; i++)
+			for (int j = 0; j < 6; j++)
+				tempBoard[i][j]=board.getBoard()[i][j];
+		
 		if (!board.checkValidSlide(x,y,x1,y1,player))
 			return false;
-		
+
 		System.out.println("Valid slide");
 		
-		if (!board.checkValidPlace(x1,y1,player,direction,piece,1))
+		if (!board.checkValidPlace(x1,y1,player,direction,piece,1)){
+			board.setBoard(tempBoard);
 			return false;
+		}
 		
 		if (tempBonus > -1)
 			getBoard().setBonusMove(-1);
