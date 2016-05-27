@@ -99,6 +99,6 @@ public class TelaJogo extends JPanel implements ObservadorJogo{
 
 	public void sair() throws IOException {
 		//jogo.terminar();
-		frameJogo.trocarTela(new TelaInicioJogo(frameJogo));
+		frameJogo.trocarTela(new TelaInicioJogo(frameJogo,-1));
 	}
 }

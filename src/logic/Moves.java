@@ -18,6 +18,7 @@ public class Moves {
 	
 	public Boolean placePiece(int x,int y,int player,int direction,int piece){
 		
+		
 		//checks first move for each player
 		if ((!blackFirstMove && player == 0 ) || (!whiteFirstMove && player == 1)){
 			if (!board.slidable(player))
@@ -60,7 +61,7 @@ public class Moves {
 		if (!board.checkValidSlide(x,y,x1,y1,player))
 			return false;
 
-		System.out.println("Valid slide");
+		System.out.println("Valid slide"+x1+" "+y1);
 		
 		if (!board.checkValidPlace(x1,y1,player,direction,piece,1)){
 			board.setBoard(tempBoard);
@@ -142,4 +143,18 @@ public class Moves {
 		
 		return true;
 	}
+	
+public Boolean placePieceInit(int x,int y,int player,int direction,int piece){
+
+		if (board.isUsed(x,y))
+			return false;
+		
+		if (!board.checkValidPlace(x,y,player,direction,piece,0))
+			return false;
+		
+		getBoard().setBonusMove(-1);
+		
+		return true;
+	}
+
 }

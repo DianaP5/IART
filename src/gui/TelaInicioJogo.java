@@ -7,6 +7,7 @@ import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -25,6 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import logic.Ai;
 import logic.Board;
 import logic.Jogo;
 import logic.Moves;
@@ -33,7 +35,11 @@ import logic.Peca.TipoPeca;
 @SuppressWarnings("serial")
 public class TelaInicioJogo extends JPanel implements MouseListener,
 		KeyListener, MouseMotionListener {
-
+	
+	private int mode;
+	private Boolean pc=true;
+	//private Boolean opp=true;
+	
 	private JPanel pnlButtons;
 	private boolean ativa = false;
 	private TipoPeca PecaSelecionada = null;
@@ -63,7 +69,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 	 * @param frameJogo
 	 * @throws IOException
 	 */
-	public TelaInicioJogo(FrameJogo frameJogo) throws IOException {
+	public TelaInicioJogo(FrameJogo frameJogo,int mode) throws IOException {
 		this.addKeyListener(this);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -71,7 +77,8 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		this.setPreferredSize(new Dimension(1000, 600));
 		setLayout(new BorderLayout(0, 0));
 		this.frameJogo=frameJogo;
-
+		this.mode=mode;
+		
 		pnlButtons = new JPanel();
 		this.add(pnlButtons, BorderLayout.EAST);
 		pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout.Y_AXIS));
@@ -86,7 +93,29 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		pecaPreta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				selecionarPeca(TipoPeca.pecaJogador1);
-				player = 0;
+				
+				//if (!opp)
+					player = 0;
+					
+					if (mode == 0){
+						pc=false;
+					}else if (mode == 1){
+						//MouseEvent e=new MouseEvent();
+						
+						//while(true){
+							if (pc){
+								Ai ai1=new Ai(board);
+								
+								board=ai1.getBoard();
+								
+								repaint();
+								pc=false;
+							}
+							System.out.println("ola");
+						//}			
+					}else{
+						
+					}
 			}
 		});
 		pecaPreta.setIcon(new ImageIcon(GestorImagens.getImage(0)));
@@ -100,7 +129,29 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		pecaBranca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				selecionarPeca(TipoPeca.pecaJogador2);
-				player = 1;
+				
+				/*if (opp)
+					player = 1;*/
+				
+				if (mode == 0){
+					pc=false;
+				}else if (mode == 1){
+					//MouseEvent e=new MouseEvent();
+					
+					//while(true){
+						if (pc){
+							Ai ai1=new Ai(board);
+							
+							board=ai1.getBoard();
+							
+							repaint();
+							pc=false;
+						}
+						System.out.println("ola");
+					//}			
+				}else{
+					
+				}
 			}
 		});
 
@@ -126,6 +177,16 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		});
 		botaoSair.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pnlButtons.add(botaoSair);
+		
+		if ( board == null) {
+
+			board = new Board();
+			moves.setBoard(board);
+			System.out.println("board created");
+
+			this.repaint();
+		}
+			
 	}
 
 	@Override
@@ -146,6 +207,10 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 	@Override
 	public void mousePressed(MouseEvent e) {
 		this.requestFocus();
+		
+		if (pc)
+			return;
+		
 		System.out.println("MousePressed");
 		int tamanhoTabuleiro = 6;
 		int ladoJogo = tamanhoTabuleiro + 1;
@@ -156,23 +221,24 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		int y = e.getY() / dimensao - 1;
 		System.out.println(x + " " + y);
 		
-		if (e.getButton() == MouseEvent.BUTTON1 && board == null) {
-
-			board = new Board();
-			moves.setBoard(board);
-			System.out.println("board created");
-
-			this.repaint();
-		} else if (x >= 0 && y >= 0 && x < 6 && y < 6) {
+		if (x >= 0 && y >= 0 && x < 6 && y < 6) {
 			System.out.println("N_PIECES: "+this.moves.pieces[0]+" "+this.moves.pieces[1]);
 			if (e.getButton() == MouseEvent.BUTTON1 && !this.isSliding && !this.activating && !this.pivoting && !bonus.equals("Slide")) {
 				if (player == 0 && this.moves.pieces[player] > 0) {
 					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0) {
-						if (moves.placePiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]]))
+						if (moves.placePiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]])){
 							this.moves.pieces[player]--;
+							if (mode == 0)
+								pc=false;
+							else pc=true;
+						}
 					}else if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
-						if(moves.placePiece(x, y, player, p1[rotate[player]]- 1,p1[rotate[player]]))
+						if(moves.placePiece(x, y, player, p1[rotate[player]]- 1,p1[rotate[player]])){
 							this.moves.pieces[player]--;
+							if (mode == 0)
+								pc=false;
+							else pc=true;
+						}
 					}
 				} else if (player == 1 && this.moves.pieces[player] > 0)
 					if (p2[rotate[player]] > -9 && p2[rotate[player]] < -4){

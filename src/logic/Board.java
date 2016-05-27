@@ -149,7 +149,7 @@ public class Board {
 			if (y1 - y > 0) {
 				ArrayList<Integer> a1 = new ArrayList<Integer>();
 				ArrayList<Integer> a2 = new ArrayList<Integer>();
-				for (int i = y + 1; i < y1; i++) {
+				for (int i = y + 1; i <= y1; i++) {
 					if (x - 1 >= 0) {
 						a1.add(x - 1);
 						a1.add(i);
@@ -184,7 +184,7 @@ public class Board {
 			if (x1 - x > 0) {
 				ArrayList<Integer> a1 = new ArrayList<Integer>();
 				ArrayList<Integer> a2 = new ArrayList<Integer>();
-				for (int i = x + 1; i < x1; i++) {
+				for (int i = x + 1; i <= x1; i++) {
 					if (y - 1 >= 0) {
 						a1.add(i);
 						a1.add(y - 1);
@@ -193,7 +193,6 @@ public class Board {
 						a2.add(i);
 						a2.add(y + 1);
 					}
-					System.out.println(i+" "+y+" "+x+" "+x1);
 					if (board[i][y] != 0)
 						return false;
 
@@ -254,7 +253,9 @@ public class Board {
 				}
 			}
 		
-		for (int i=0; i < a2.size()-1;i=i+2)
+		for (int i=0; i < a2.size()-1;i=i+2){
+			if (a2.get(i+1) >= 6 || a2.get(i) >= 6)
+				continue;
 			if (direction == 0){
 				if (board[a2.get(i)][a2.get(i+1)] < 0){
 					int piece=-board[a2.get(i)][a2.get(i+1)]+1;
@@ -280,6 +281,7 @@ public class Board {
 					board[a2.get(i)][a2.get(i+1)]=piece;
 				}
 			}
+		}
 	}
 
 	public Boolean checkValidPlace(int x, int y, int player, int direction,int piece,int slide) {
