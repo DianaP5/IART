@@ -15,23 +15,33 @@ public class Ai {
 		 //level player alpha beta
 		int[] vals={-1,-1,0};
 		
-	    /*  result = minimax(1, player, Integer.MIN_VALUE+1, Integer.MAX_VALUE-1,vals);
+	      result = minimax(1, player, Integer.MIN_VALUE+1, Integer.MAX_VALUE-1,vals);
 	         // depth, max-turn, alpha, beta
 	      System.out.println("REPARA NISTO: "+result[0]+" "+result[1]+" "+result[2]+" "+result[4]+" "+result[5]);
 	      
-	      if (result[4] == -1 && result[5] == -1)
+	      if (result[4] == -1 && result[5] == -1){
 	    	  this.getBoard().getBoard()[result[1]][result[2]] = result[3];
-	      else{
+	      	System.out.println("PLACE: "+result[1]+" "+result[2]);
+	      }else{
 	    	  Moves m1=new Moves();
 	    	  m1.setBoard(board);
-	    	  int piece=board.getBoard()[result[1]][result[2]];
+	    	  //int piece=board.getBoard()[result[1]][result[2]];
 	    	  
 	    	  m1.removePiece(result[1],result[2],1);
 	    	  
-	    	  m1.slidePiece(result[1], result[2], result[4],result[5], player, -piece-5, piece);
+	    	  int mul=1;
+	    	  
+	    	  if (result[3] > 0)
+	    		  mul=1;
+	    	  else mul=-1;
+	    	  
+	    	  m1.slidePiece(result[1], result[2], result[4],result[5], 1,result[3]*mul-5, result[3]);
+	    	  int cenas=result[3]*mul-5;
+	    	  System.out.println("CENAS: "+cenas);
+	    	  
 	      }
-	      */
-	      System.out.println(this.generateSlides().size());
+	      
+	      //System.out.println(this.generateSlides().size());
 		
 	      //this.getBoard().printBoard();
 	}
@@ -39,12 +49,13 @@ public class Ai {
 	public static void main(String[] args) {
 		Board b1=new Board();
 		b1.initBoard();
-		b1.getBoard()[2][3]=-6;
+		/*b1.getBoard()[2][3]=-6;
 		b1.getBoard()[0][0]=-6;
 		b1.getBoard()[2][2]=-1;
 
 		b1.getBoard()[3][4]=-2;
 		//b1.printBoard();
+		*/
 		new Ai(b1);
 		
 	}
@@ -83,6 +94,7 @@ public class Ai {
 	                    if (nextMoves.get(i).length > 3){
 	                    	slideX=nextMoves.get(i)[2];
 	                    	slideY=nextMoves.get(i)[3];
+	                    	piece=nextMoves.get(i)[4];
 	                    }else{
 	                    	slideX=-1;
 	                    	slideY=-1;
@@ -98,6 +110,7 @@ public class Ai {
 	                    if (nextMoves.get(i).length > 3){
 	                    	slideX=nextMoves.get(i)[2];
 	                    	slideY=nextMoves.get(i)[3];
+	                    	piece=nextMoves.get(i)[4];
 	                    }else{
 	                    	slideX=-1;
 	                    	slideY=-1;
@@ -178,14 +191,14 @@ public class Ai {
 	}else{
 		int slideX=move[2],slideY=move[3];
 		
-		returnValue+=evaluateSlide(bestRow,bestCol,slideX,slideY);
+		returnValue+=evaluateSlide(bestRow,bestCol,slideX,slideY,move[4]);
 		
 		return returnValue;
 	}
 		
 	}
 
-	private int evaluateSlide(int bestRow, int bestCol, int slideX, int slideY) {
+	private int evaluateSlide(int bestRow, int bestCol, int slideX, int slideY,int piece) {
 
 		/*
 		   1) 1.1)Verificar se pode mover e desativar outras peças e ficar ativo-> 10+x*10 x: nº de peças desativadas
@@ -208,16 +221,16 @@ public class Ai {
 		
 			Moves m1=new Moves();
 			m1.setBoard(board);
-			int piece=m1.getBoard().getBoard()[bestRow][bestCol];
+			//int piece=m1.getBoard().getBoard()[bestRow][bestCol];
 			
 			m1.removePiece(bestRow, bestCol, 1);
+			int mul=1;
 			
-			if (m1.slidePiece(bestRow, bestCol, slideX, slideY, 1, -piece-5, piece)){
-				
-				System.out.println("REPARA NISTO");
-				m1.getBoard().printBoard();
-				
-				System.out.println(m1.getBoard().getBoard()[slideX][slideY]);
+			if (piece > 0)
+				mul=1;
+			else mul=-1;
+			
+			if (m1.slidePiece(bestRow, bestCol, slideX, slideY, 1, piece*mul-5, piece)){
 				
 				//board.setBoard(tempBoard);
 				
@@ -232,7 +245,7 @@ public class Ai {
 			}
 			System.out.println("DIFF_: "+count);
 			
-		return count*10;
+		return 10+(count-1)*10;
 	}
 
 	private int evaluatePlace(int bestRow, int bestCol,int p) {
@@ -286,6 +299,8 @@ public class Ai {
 	
 	private ArrayList<int[]> generateSlides() {
 		int[] p2 = {-6,-7,-8,-5};
+		int[] p3 = {-6,6,-7,7,-8,8,-5,5};
+		int mul=1;
 		
 		ArrayList<int[]> moves=new ArrayList<int[]>();
 
@@ -298,50 +313,67 @@ public class Ai {
 					int[] old={i,j,p2[k]};
 				
 						if (m1.getBoard().getBoard()[i][j] == p2[k]){
-							int piece=m1.getBoard().getBoard()[i][j];
+							//int piece=m1.getBoard().getBoard()[i][j];
 							
 							for (int h=0; h < 6; h++){
 								m1.removePiece(i, j, 1);
-								
-								if (m1.slidePieceHeu(i, j, 5-h, j, 1, -piece -5,piece)){
-									int[] temp={i, j, 5-h, j};
-									moves.add(temp);
-									System.out.println("O1: "+temp[2]+" "+temp[3]);
-									m1.getBoard().printBoard();
-									m1.removePiece(i, j, 1);
-								}
+								for (int b=0; b < p3.length;b++){
+									if (p3[b] > 0)
+										mul=1;
+									else mul=-1;
+									
+									if (m1.slidePieceHeu(i, j, 5-h, j, 1, p3[b]*mul -5,p3[b])){
+										int[] temp={i, j, 5-h, j,p3[b]};
+										moves.add(temp);
+										System.out.println("O1: "+temp[2]+" "+temp[3]);
+										m1.getBoard().printBoard();
+										m1.removePiece(i, j, 1);
+									}}
 							}
 							
 							m1.removePiece(i, j, 1);
 							
 							for (int h=0; h < 6; h++)
-								if (m1.slidePieceHeu(i, j, h, j, 1, -piece -5,piece)){
-									int[] temp={i, j, h, j};
+								for (int b=0; b < p3.length;b++){
+									if (p3[b] > 0)
+										mul=1;
+									else mul=-1;
+								if (m1.slidePieceHeu(i, j, h, j, 1, p3[b]*mul -5,p3[b])){
+									int[] temp={i, j, h, j,p3[b]};
 									moves.add(temp);
 									System.out.println("O2: "+temp[2]+" "+temp[3]);
 									m1.removePiece(i, j, 1);
 								}
+								}
 							m1.removePiece(i, j, 1);
 							
 							for (int h=0; h < 6; h++)
-								if (m1.slidePieceHeu(i, j, i, 5-h, 1, -piece -5,piece)){
-									int[] temp={i, j, i, 5-h};
+								for (int b=0; b < p3.length;b++){
+									if (p3[b] > 0)
+										mul=1;
+									else mul=-1;
+								if (m1.slidePieceHeu(i, j, i, 5-h, 1, p3[b]*mul -5,p3[b])){
+									int[] temp={i, j, i, 5-h,p3[b]};
 									moves.add(temp);
 									System.out.println("O3: "+temp[2]+" "+temp[3]);
 									m1.removePiece(i, j, 1);
 									//m1.getBoard().getBoard()[i][j]=piece;
-								}
+								}}
 							
 							m1.removePiece(i, j, 1);
 							
 							for (int h=0; h < 6; h++)
-								if (m1.slidePieceHeu(i, j, i, h, 1, -piece -5,piece)){
-									int[] temp={i, j, i, h};
+								for (int b=0; b < p3.length;b++){
+									if (p3[b] > 0)
+										mul=1;
+									else mul=-1;
+								if (m1.slidePieceHeu(i, j, i, h, 1, p3[b]*mul -5,p3[b])){
+									int[] temp={i, j, i, h,p3[b]};
 									moves.add(temp);
 									System.out.println("O4: "+temp[2]+" "+temp[3]);
 									m1.removePiece(i, j, 1);
 									//m1.getBoard().getBoard()[i][j]=piece;
-								}
+								}}
 							board.getBoard()[old[0]][old[1]]=old[2];
 						}
 				}
@@ -353,7 +385,7 @@ public class Ai {
 					moves.remove(j);
 		
 		//for(int i=0; i < moves.size(); i++)
-			//System.out.println("O: "+moves.get(i)[2]+" "+moves.get(i)[3]);
+			//System.out.println("O: "+moves.get(i)[2]+" "+moves.get(i)[3]+" "+moves.get(i)[4]);
 		
 		return moves;
 	}

@@ -61,7 +61,7 @@ public class Moves {
 		if (!board.checkValidSlide(x,y,x1,y1,player))
 			return false;
 
-		System.out.println("Valid slide"+x1+" "+y1);
+		System.out.println("Valid slide"+x+" "+y+" X "+x1+" "+y1);
 		
 		if (!board.checkValidPlace(x1,y1,player,direction,piece,1)){
 			board.setBoard(tempBoard);
@@ -179,7 +179,7 @@ public class Moves {
 		if (!board.checkValidSlide(x,y,x1,y1,player))
 			return false;
 	
-		System.out.println("Valid slide"+x1+" "+y1);
+		System.out.println("Valid slide"+x+" "+y+" X "+x1+" "+y1);
 		
 		if (!board.checkValidPlace(x1,y1,player,direction,piece,1)){
 			board.setBoard(tempBoard);
