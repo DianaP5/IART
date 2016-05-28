@@ -176,9 +176,19 @@ public class Moves {
 			for (int j = 0; j < 6; j++)
 				tempBoard[i][j]=board.getBoard()[i][j];
 		
-		if (!board.checkValidSlide(x,y,x1,y1,player))
+		if (!board.checkValidSlide(x,y,x1,y1,player)){
+			board.setBoard(tempBoard);
 			return false;
-	
+		}
+		
+		board.setBoard(tempBoard);
+		
+		tempBoard = new int[6][6];
+		
+		for (int i = 0; i < 6; i++)
+			for (int j = 0; j < 6; j++)
+				tempBoard[i][j]=board.getBoard()[i][j];
+		
 		//System.out.println("Valid slide"+x+" "+y+" X "+x1+" "+y1);
 		
 		if (!board.checkValidPlace(x1,y1,player,direction,piece,1)){

@@ -41,21 +41,24 @@ public class Ai {
 	    	  
 	      }
 	      
-	      //System.out.println(this.generateSlides().size());
-		
+	     // System.out.println(this.generateSlides().size());
+	      
+	      //board.printBoard();
 	      //this.getBoard().printBoard();
 	}
 
 	public static void main(String[] args) {
 		Board b1=new Board();
 		b1.initBoard();
-		/*b1.getBoard()[2][3]=-6;
 		b1.getBoard()[0][0]=-6;
-		b1.getBoard()[2][2]=-1;
-
-		b1.getBoard()[3][4]=-2;
-		//b1.printBoard();
-		*/
+		b1.getBoard()[5][0]=-6;
+		b1.getBoard()[2][1]=-2;
+		b1.getBoard()[5][2]=-6;
+		b1.getBoard()[2][3]=3;
+		b1.getBoard()[0][5]=-2;
+		b1.getBoard()[5][5]=-2;
+		b1.printBoard();
+		
 		new Ai(b1);
 		
 	}
@@ -63,8 +66,6 @@ public class Ai {
 	 private int[] minimax(int depth, int player, int alpha, int beta,int[] move) {
 	      // Generate possible next moves in a list of int[2] of {row, col}.
 	      ArrayList<int[]> nextMoves = generateMoves();
-	      
-	      System.out.println("SIZE: "+nextMoves.size());
 	      
 	      // mySeed is maximizing; while oppSeed is minimizing
 	      int score = 0;
@@ -133,6 +134,7 @@ public class Ai {
 		
 		int bestRow=move[0], bestCol=move[1], piece=move[2];
 		int returnValue=0;
+		board.printBoard();
 		System.out.println("MOVE: "+move.length+" "+bestRow+" "+bestCol);
 		
 		if (move.length == 3){
@@ -177,8 +179,6 @@ public class Ai {
 		else if (bestCol == 5)
 			returnValue+= 1;
 		
-		board.printBoard();
-		
 		/*if (board.checkActivePiece(bestRow, bestCol, 1)){
 			returnValue+=10;
 			System.out.println("ENTÃOA");
@@ -186,12 +186,12 @@ public class Ai {
 		
 		board.setBoard(tempBoard);
 		
-		System.out.println("ENTÃO "+returnValue+" "+bestRow+" "+bestCol);
 		return returnValue;
 	}else{
 		int slideX=move[2],slideY=move[3];
+		piece=move[4];
 		
-		returnValue+=evaluateSlide(bestRow,bestCol,slideX,slideY,move[4]);
+		returnValue+=evaluateSlide(bestRow,bestCol,slideX,slideY,piece);
 		
 		return returnValue;
 	}
@@ -237,11 +237,14 @@ public class Ai {
 				//board.printBoard();
 				
 				for (int n = 0; n < 6; n++)
-					for (int m = 0; m < 6; m++) 
+					for (int m = 0; m < 6; m++) //>
 						if (m1.getBoard().getBoard()[n][m] != tempBoard[n][m])
 							count++;
+				board.printBoard();
 				
 				board.setBoard(tempBoard);
+				
+				board.printBoard();
 			}
 			System.out.println("DIFF_: "+count);
 			
@@ -310,10 +313,9 @@ public class Ai {
 		for (int i = 0; i < 6; i++)
 			for (int j = 0; j < 6; j++){
 				for (int k=0; k < p2.length; k++){
-					int[] old={i,j,p2[k]};
-				
 						if (m1.getBoard().getBoard()[i][j] == p2[k]){
 							//int piece=m1.getBoard().getBoard()[i][j];
+							int[] old={i,j,p2[k]};
 							
 							for (int h=0; h < 6; h++){
 								m1.removePiece(i, j, 1);
@@ -416,7 +418,6 @@ public class Ai {
 	}
 	
 	private ArrayList<int[]> generateMoves() {
-		
 		ArrayList<int[]> places=generatePlaces();
 		ArrayList<int[]> slides=generateSlides();
 		

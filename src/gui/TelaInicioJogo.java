@@ -93,7 +93,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		pecaPreta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				selecionarPeca(TipoPeca.pecaJogador1);
-				
 				//if (!opp)
 					player = 0;
 					
@@ -226,6 +225,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0) {
 						if (moves.placePiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]])){
 							this.moves.pieces[player]--;
+							board.printBoard();
 							if (mode == 0)
 								pc=false;
 							else pc=true;
@@ -233,6 +233,8 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					}else if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
 						if(moves.placePiece(x, y, player, p1[rotate[player]]- 1,p1[rotate[player]])){
 							this.moves.pieces[player]--;
+							board.printBoard();
+							System.out.println(p1[rotate[player]]);
 							if (mode == 0)
 								pc=false;
 							else pc=true;
@@ -269,7 +271,14 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						if (bonus.equals("End turn")){
 							bonus="";
 							moves.getBoard().setBonusMove(-1);
+							if (mode == 0)
+								pc=false;
+							else pc=true;
 						}
+					}else{
+						if (mode == 0)
+							pc=false;
+						else pc=true;
 					}
 				} else if (player == 1)
 					if (p2[rotate[player]] > -9 && p2[rotate[player]] < -4){
@@ -298,7 +307,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				bonus="";
 				
 			}else if (e.getButton() == MouseEvent.BUTTON1 && this.pivoting) {
-				System.out.println("MERDA PIVOTING");
 				if (player == 0) {
 					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0){
 						 if(!moves.pivotPiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]]))
@@ -339,7 +347,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				bonus="";
 				
 			}else if (e.getButton() == MouseEvent.BUTTON1 && this.activating) {
-				System.out.println("MERDA");
 				if (player == 0) {
 					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0){
 						 if(!moves.activatePiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]]))
