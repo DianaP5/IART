@@ -132,6 +132,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					player = 1;*/
 				
 				if (mode == 0){
+					player=1;
 					pc=false;
 				}else if (mode == 1){
 					//MouseEvent e=new MouseEvent();
@@ -221,11 +222,12 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		if (x >= 0 && y >= 0 && x < 6 && y < 6) {
 			System.out.println("N_PIECES: "+this.moves.pieces[0]+" "+this.moves.pieces[1]);
 			if (e.getButton() == MouseEvent.BUTTON1 && !this.isSliding && !this.activating && !this.pivoting && !bonus.equals("Slide")) {
+				
 				if (player == 0 && this.moves.pieces[player] > 0) {
 					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0) {
+						System.out.println("FDS"+player+" "+p1[rotate[player]]);
 						if (moves.placePiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]])){
 							this.moves.pieces[player]--;
-							board.printBoard();
 							if (mode == 0)
 								pc=false;
 							else pc=true;
@@ -234,7 +236,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						if(moves.placePiece(x, y, player, p1[rotate[player]]- 1,p1[rotate[player]])){
 							this.moves.pieces[player]--;
 							board.printBoard();
-							System.out.println(p1[rotate[player]]);
 							if (mode == 0)
 								pc=false;
 							else pc=true;
@@ -289,7 +290,8 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 							this.isSliding=false;
 			}else  if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && bonus.equals("Pick up")){
 				moves.pickUpPiece(x, y, player);
-			}if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && bonus.equals("Pivot")){
+				bonus="";
+			}else if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && bonus.equals("Pivot")){
 				this.sliding[0]=x;
 				this.sliding[1]=y;
 				this.sliding[2]=board.getBoard()[x][y];
@@ -426,6 +428,11 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					imprimirPeca(g2d,p1[this.rotate[player]],ratoX,ratoY, dimensao);
 				else imprimirPeca(g2d,p2[this.rotate[player]],ratoX,ratoY, dimensao);
 			}
+		}else{
+			if (player == 0)
+				imprimirPeca(g2d,p1[this.rotate[player]],ratoX,ratoY, dimensao);
+			else if (player == 1)
+				imprimirPeca(g2d,p2[this.rotate[player]],ratoX,ratoY, dimensao);
 		}
 		
 		g2d.dispose();

@@ -18,7 +18,6 @@ public class Moves {
 	
 	public Boolean placePiece(int x,int y,int player,int direction,int piece){
 		
-		
 		//checks first move for each player
 		if ((!blackFirstMove && player == 0 ) || (!whiteFirstMove && player == 1)){
 			if (!board.slidable(player))
