@@ -80,7 +80,7 @@ public class Board {
 			for (int j = 0; j < this.getBoardSize(); j++)
 				if (board[j][i] > delta1 && board[j][i] < delta2)
 					if (checkOrtogonalSpaces(j, i)){
-						System.out.println("SLIDABLE");
+						//System.out.println("SLIDABLE");
 						return true;
 					}
 		}
@@ -165,7 +165,7 @@ public class Board {
 			} else {
 				ArrayList<Integer> a1 = new ArrayList<Integer>();
 				ArrayList<Integer> a2 = new ArrayList<Integer>();
-				for (int i = y1; i < y - 1; i++) {
+				for (int i = y - 1; i >= y1; i--) {
 					if (x - 1 >= 0) {
 						a1.add(x - 1);
 						a1.add(i);
@@ -174,6 +174,7 @@ public class Board {
 						a2.add(x + 1);
 						a2.add(i);
 					}
+					
 					if (board[x][i] != 0)
 						return false;
 
@@ -184,7 +185,7 @@ public class Board {
 			if (x1 - x > 0) {
 				ArrayList<Integer> a1 = new ArrayList<Integer>();
 				ArrayList<Integer> a2 = new ArrayList<Integer>();
-				for (int i = x + 1; i <= x1; i++) {
+				for (int i = x + 1; i <= x1; i++) { //REMOVE >= ?
 					if (y - 1 >= 0) {
 						a1.add(i);
 						a1.add(y - 1);
@@ -202,7 +203,7 @@ public class Board {
 			} else {
 				ArrayList<Integer> a1 = new ArrayList<Integer>();
 				ArrayList<Integer> a2 = new ArrayList<Integer>();
-				for (int i = x1; i < x - 1; i++) {
+				for (int i = x-1; i >= x1; i--) {
 					if (y - 1 >= 0) {
 						a1.add(i);
 						a1.add(y - 1);
@@ -211,7 +212,7 @@ public class Board {
 						a2.add(i);
 						a2.add(y + 1);
 					}
-
+					
 					if (board[i][y] != 0)
 						return false;
 
@@ -295,7 +296,7 @@ public class Board {
 		validaty[2] = checkValidCoord(x, y + 1); // down
 		validaty[3] = checkValidCoord(x, y - 1); // up
 		
-		System.out.println(validaty[0]+" "+validaty[1]+" "+validaty[2]+" "+validaty[3]);
+		//System.out.println(validaty[0]+" "+validaty[1]+" "+validaty[2]+" "+validaty[3]);
 		
 		for (int i = 0; i < validaty.length; i++)
 			if (validaty[i]) {
@@ -345,7 +346,7 @@ public class Board {
 				}
 			}
 		
-		System.out.println(rules[0]+" "+rules[1]+" "+rules[2]+" "+rules[3]);
+		//System.out.println(rules[0]+" "+rules[1]+" "+rules[2]+" "+rules[3]);
 		
 		//makes sense? TODO
 		if (!validaty[0] && !validaty[1] && !validaty[2] && !validaty[3])
@@ -356,7 +357,7 @@ public class Board {
 		for (int k = 0; k < rules.length; k++)
 			if (rules[k] == 2)
 				activeCount++;
-		System.out.println("dir: "+direction);
+		//System.out.println("dir: "+direction);
 		//if more than one piece if active, cannot place
 		if (activeCount > 1)
 			return false;
@@ -370,7 +371,7 @@ public class Board {
 						}else return this.placePiece(x, y, false, player, piece);
 				}
 				//}
-		System.out.println("dir: "+direction);
+		//System.out.println("dir: "+direction);
 		
 		/*if (slide == 1){
 			if (rules[0] <= 1 && rules[1] <= 1 && rules[2] <= 1 && rules[3] <= 1) {
@@ -403,7 +404,7 @@ public class Board {
 
 	public Boolean placePiece(int x, int y, Boolean state, int player,
 			int piece) {
-		System.out.println(state+" "+piece);
+		//System.out.println(state+" "+piece);
 		
 		if (state)
 			if (piece > 0)
