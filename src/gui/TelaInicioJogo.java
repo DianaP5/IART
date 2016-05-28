@@ -111,7 +111,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 								repaint();
 								pc=false;
 							}
-							System.out.println("ola");
 						//}			
 					}else{
 						
@@ -147,7 +146,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 							repaint();
 							pc=false;
 						}
-						System.out.println("ola");
 					//}			
 				}else{
 					

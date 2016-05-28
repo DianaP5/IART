@@ -40,7 +40,7 @@ public class Moves {
 	}
 	
 	public Boolean slidePiece(int x, int y,int x1,int y1, int player,int direction,int piece){
-		System.out.println("SLIDING");
+		//System.out.println("SLIDING");
 		
 		int tempBonus=getBoard().getBonusMove();;
 		/*if (!board.checkActivePiece(x,y,player))
@@ -158,7 +158,7 @@ public class Moves {
 	}
 
 	public Boolean slidePieceHeu(int x, int y,int x1,int y1, int player,int direction,int piece){
-		System.out.println("SLIDING_HEU");
+		//System.out.println("SLIDING_HEU");
 		
 		int tempBonus=getBoard().getBonusMove();;
 		/*if (!board.checkActivePiece(x,y,player))
@@ -179,7 +179,7 @@ public class Moves {
 		if (!board.checkValidSlide(x,y,x1,y1,player))
 			return false;
 	
-		System.out.println("Valid slide"+x+" "+y+" X "+x1+" "+y1);
+		//System.out.println("Valid slide"+x+" "+y+" X "+x1+" "+y1);
 		
 		if (!board.checkValidPlace(x1,y1,player,direction,piece,1)){
 			board.setBoard(tempBoard);
@@ -190,7 +190,7 @@ public class Moves {
 		if (tempBonus > -1)
 			getBoard().setBonusMove(-1);
 		
-		System.out.println("ValidPlace");
+		//System.out.println("ValidPlace");
 		
 		return true;
 		

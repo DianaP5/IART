@@ -325,8 +325,8 @@ public class Ai {
 									if (m1.slidePieceHeu(i, j, 5-h, j, 1, p3[b]*mul -5,p3[b])){
 										int[] temp={i, j, 5-h, j,p3[b]};
 										moves.add(temp);
-										System.out.println("O1: "+temp[2]+" "+temp[3]);
-										m1.getBoard().printBoard();
+										//System.out.println("O1: "+temp[2]+" "+temp[3]);
+										//m1.getBoard().printBoard();
 										m1.removePiece(i, j, 1);
 									}}
 							}
@@ -341,7 +341,7 @@ public class Ai {
 								if (m1.slidePieceHeu(i, j, h, j, 1, p3[b]*mul -5,p3[b])){
 									int[] temp={i, j, h, j,p3[b]};
 									moves.add(temp);
-									System.out.println("O2: "+temp[2]+" "+temp[3]);
+									//System.out.println("O2: "+temp[2]+" "+temp[3]);
 									m1.removePiece(i, j, 1);
 								}
 								}
@@ -355,7 +355,7 @@ public class Ai {
 								if (m1.slidePieceHeu(i, j, i, 5-h, 1, p3[b]*mul -5,p3[b])){
 									int[] temp={i, j, i, 5-h,p3[b]};
 									moves.add(temp);
-									System.out.println("O3: "+temp[2]+" "+temp[3]);
+									//System.out.println("O3: "+temp[2]+" "+temp[3]);
 									m1.removePiece(i, j, 1);
 									//m1.getBoard().getBoard()[i][j]=piece;
 								}}
@@ -370,7 +370,7 @@ public class Ai {
 								if (m1.slidePieceHeu(i, j, i, h, 1, p3[b]*mul -5,p3[b])){
 									int[] temp={i, j, i, h,p3[b]};
 									moves.add(temp);
-									System.out.println("O4: "+temp[2]+" "+temp[3]);
+									//System.out.println("O4: "+temp[2]+" "+temp[3]);
 									m1.removePiece(i, j, 1);
 									//m1.getBoard().getBoard()[i][j]=piece;
 								}}
