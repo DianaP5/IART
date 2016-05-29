@@ -6,6 +6,7 @@ public class Ai {
 	
 	private int player=1;
 	private Board board;
+	private int nPieces=10;
 	private int mySeed=1;
 	private int oppSeed=0;
 	private int[] result;
@@ -15,12 +16,16 @@ public class Ai {
 		 //level player alpha beta
 		int[] vals={-1,-1,0};
 		
-	      result = minimax(1, player, Integer.MIN_VALUE+1, Integer.MAX_VALUE-1,vals);
+	      result = minimax(1, getPlayer(), Integer.MIN_VALUE+1, Integer.MAX_VALUE-1,vals);
 	         // depth, max-turn, alpha, beta
+	      board.printBoard();
 	      System.out.println("REPARA NISTO: "+result[0]+" "+result[1]+" "+result[2]+" "+result[4]+" "+result[5]);
 	      
 	      if (result[4] == -1 && result[5] == -1){
-	    	  this.getBoard().getBoard()[result[1]][result[2]] = result[3];
+	    	  if (getnPieces() > 0){
+	    		  this.getBoard().getBoard()[result[1]][result[2]] = result[3];
+	    		  setnPieces(getnPieces() - 1);
+	    	  }
 	      	System.out.println("PLACE: "+result[1]+" "+result[2]);
 	      }else{
 	    	  Moves m1=new Moves();
@@ -66,6 +71,8 @@ public class Ai {
 	 private int[] minimax(int depth, int player, int alpha, int beta,int[] move) {
 	      // Generate possible next moves in a list of int[2] of {row, col}.
 	      ArrayList<int[]> nextMoves = generateMoves();
+	      
+	      System.out.println(nextMoves.size());
 	      
 	      // mySeed is maximizing; while oppSeed is minimizing
 	      int score = 0;
@@ -248,7 +255,7 @@ public class Ai {
 			}
 			System.out.println("DIFF_: "+count);
 			
-		return 10+(count-1)*10;
+		return 5+(count-1)*10;
 	}
 
 	private int evaluatePlace(int bestRow, int bestCol,int p) {
@@ -417,7 +424,7 @@ public class Ai {
 		return moves;
 	}
 	
-	private ArrayList<int[]> generateMoves() {
+	public ArrayList<int[]> generateMoves() {
 		ArrayList<int[]> places=generatePlaces();
 		ArrayList<int[]> slides=generateSlides();
 		
@@ -433,6 +440,22 @@ public class Ai {
 
 	public void setBoard(Board board) {
 		this.board = board;
+	}
+
+	private int getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(int player) {
+		this.player = player;
+	}
+
+	public int getnPieces() {
+		return nPieces;
+	}
+
+	public void setnPieces(int nPieces) {
+		this.nPieces = nPieces;
 	}
 	 
 }

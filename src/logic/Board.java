@@ -450,4 +450,5 @@ public class Board {
 	public void setBonusMove(int bonusMove) {
 		this.bonusMove = bonusMove;
 	}
+	
 }

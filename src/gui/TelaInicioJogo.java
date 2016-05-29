@@ -49,6 +49,8 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 	private Moves moves = new Moves();
 	private int player = -1;
 	private int[] rotate = { 1, 1 };
+	private int[] pickPos={-1,-1};
+	
 	int[] p1 = { 2, -2, 3, -3, 4, -4, 1, -1 };
 	int[] p2 = { 6, -6, 7, -7, 8, -8, 5, -5 };
 	
@@ -96,6 +98,15 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				//if (!opp)
 					player = 0;
 					
+					int[][] tempBoard = new int[6][6];
+					
+					for (int i = 0; i < 6; i++)
+						for (int j = 0; j < 6; j++)
+							tempBoard[i][j]=board.getBoard()[i][j];
+					
+					moves.checkEndOfGame(1);
+					//board.checkEndOfGame(1);
+					moves.setBoard(board);
 					if (mode == 0){
 						pc=false;
 					}else if (mode == 1){
@@ -104,7 +115,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						//while(true){
 							if (pc){
 								Ai ai1=new Ai(board);
-								
+								moves.pieces[1]=ai1.getnPieces();
 								board=ai1.getBoard();
 								
 								repaint();
@@ -140,6 +151,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					//while(true){
 						if (pc){
 							Ai ai1=new Ai(board);
+							moves.pieces[1]=ai1.getnPieces();
 							
 							board=ai1.getBoard();
 							
@@ -221,16 +233,17 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		
 		if (x >= 0 && y >= 0 && x < 6 && y < 6) {
 			System.out.println("N_PIECES: "+this.moves.pieces[0]+" "+this.moves.pieces[1]);
+			System.out.println("FDS"+this.isSliding+" "+this.activating+" "+this.pivoting+" "+bonus.equals("Slide"));
 			if (e.getButton() == MouseEvent.BUTTON1 && !this.isSliding && !this.activating && !this.pivoting && !bonus.equals("Slide")) {
-				
 				if (player == 0 && this.moves.pieces[player] > 0) {
 					if (p1[rotate[player]] > -5 && p1[rotate[player]] < 0) {
-						System.out.println("FDS"+player+" "+p1[rotate[player]]);
+						
 						if (moves.placePiece(x, y, player, -p1[rotate[player]] - 1,p1[rotate[player]])){
 							this.moves.pieces[player]--;
 							if (mode == 0)
 								pc=false;
 							else pc=true;
+							bonus="";
 						}
 					}else if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5){
 						if(moves.placePiece(x, y, player, p1[rotate[player]]- 1,p1[rotate[player]])){
@@ -239,6 +252,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 							if (mode == 0)
 								pc=false;
 							else pc=true;
+							bonus="";
 						}
 					}
 				} else if (player == 1 && this.moves.pieces[player] > 0)
@@ -257,6 +271,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					}else if (p1[rotate[player]] > 0 && p1[rotate[player]] < 5)
 						if (moves.slidePiece(this.sliding[0], this.sliding[1], x, y, player, p1[rotate[player]] - 1,p1[rotate[player]]))
 							this.isSliding=false;
+					bonus="";
 					
 					if (moves.getBoard().getBonusMove() > -1){
 						Object[] possibilities = {"Place", "Slide", "Activate","Pick up","Pivot","End turn"};
@@ -264,11 +279,19 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						                    frameJogo,
 						                    "Possible bonus move:\n",
 						                    "Optional Bonus Move!",
-						                    JOptionPane.PLAIN_MESSAGE,
+						                    JOptionPane.PLAIN_MESSAGE  ,
 						                    null,
 						                    possibilities,
 						                    "End turn");
-						bonus=s;
+						if (s != null)
+							bonus=s;
+						else s="End turn";
+						
+						if (s.equals("Pick up")){
+							pickPos[0]=x;
+							pickPos[1]=y;
+						}
+						
 						if (bonus.equals("End turn")){
 							bonus="";
 							moves.getBoard().setBonusMove(-1);
@@ -281,16 +304,59 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 							pc=false;
 						else pc=true;
 					}
-				} else if (player == 1)
+				} else if (player == 1){
 					if (p2[rotate[player]] > -9 && p2[rotate[player]] < -4){
 						if (moves.slidePiece(this.sliding[0], this.sliding[1], x, y, player, -p2[rotate[player]] - 5,p2[rotate[player]]))
 							this.isSliding=false;
 					}else if (p2[rotate[player]] > 4 && p2[rotate[player]] < 9)
 						if (moves.slidePiece(this.sliding[0], this.sliding[1], x, y, player, p2[rotate[player]] - 5,p2[rotate[player]]))
 							this.isSliding=false;
-			}else  if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && bonus.equals("Pick up")){
-				moves.pickUpPiece(x, y, player);
-				bonus="";
+					
+					bonus="";
+					
+					if (moves.getBoard().getBonusMove() > -1){
+						Object[] possibilities = {"Place", "Slide", "Activate","Pick up","Pivot","End turn"};
+						String s = (String)JOptionPane.showInputDialog(
+						                    frameJogo,
+						                    "Possible bonus move:\n",
+						                    "Optional Bonus Move!",
+						                    JOptionPane.PLAIN_MESSAGE,
+						                    null,
+						                    possibilities,
+						                    "End turn");
+						if (s != null)
+							bonus=s;
+						else s="End turn";
+						
+						if (s.equals("Pick up")){
+							pickPos[0]=x;
+							pickPos[1]=y;
+						}
+						
+						if (bonus.equals("End turn")){
+							bonus="";
+							moves.getBoard().setBonusMove(-1);
+							if (mode == 0)
+								pc=false;
+							else pc=true;
+						}
+					}else{
+						if (mode == 0)
+							pc=false;
+						else pc=true;
+					}
+					
+				}}else  if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && bonus.equals("Pick up")){
+					if (pickPos[0] != x || pickPos[1] != y){
+						moves.pickUpPiece(x, y, player);
+						bonus="";
+						pickPos[0]=-1;
+						pickPos[1]=-1;
+						
+						if (mode == 0)
+							pc=false;
+						else pc=true;
+					}
 			}else if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && bonus.equals("Pivot")){
 				this.sliding[0]=x;
 				this.sliding[1]=y;
@@ -305,7 +371,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				moves.removePiece(x, y, player);
 				this.pivoting=true;
 				
-				System.out.println("cenas1");
 				bonus="";
 				
 			}else if (e.getButton() == MouseEvent.BUTTON1 && this.pivoting) {
@@ -331,6 +396,9 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				this.sliding[3]=-1;
 				this.pivoting=false;
 				
+				if (mode == 0)
+					pc=false;
+				else pc=true;
 			}else if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && !this.activating && bonus.equals("Activate")){
 				this.sliding[0]=x;
 				this.sliding[1]=y;
@@ -345,7 +413,6 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				moves.removePiece(x, y, player);
 				this.activating=true;
 				
-				System.out.println("cenas1");
 				bonus="";
 				
 			}else if (e.getButton() == MouseEvent.BUTTON1 && this.activating) {
@@ -373,6 +440,10 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				this.sliding[2]=0;
 				this.sliding[3]=-1;
 				this.activating=false;
+				
+				if (mode == 0)
+					pc=false;
+				else pc=true;
 				
 			} else if (e.getButton() == MouseEvent.BUTTON3 && !this.isSliding) {
 				this.isSliding=true;

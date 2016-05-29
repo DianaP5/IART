@@ -144,12 +144,22 @@ public class Moves {
 	}
 	
 	public Boolean placePieceInit(int x,int y,int player,int direction,int piece){
-
+		
+				//checks first move for each player
+				if ((pieces[player] < 10 && player == 0 ) || (pieces[player] < 10 && player == 1)){
+					if (!board.slidable(player))
+						return false;
+				}else if (player == 0)
+						blackFirstMove=false;
+				else if (player == 1)
+						whiteFirstMove=false;
+				
 		if (board.isUsed(x,y))
 			return false;
 		
 		if (!board.checkValidPlace(x,y,player,direction,piece,0))
 			return false;
+		System.out.println(pieces[player]);
 		
 		getBoard().setBonusMove(-1);
 		
@@ -204,6 +214,26 @@ public class Moves {
 		return true;
 		
 	}
+	
+	public Boolean checkEndOfGame(int player){
+		int result=0;
+		
+		Ai ai1=new Ai(board);
+		System.out.println("NNNNN: "+ai1.getnPieces());
+		
+		ai1.setPlayer(player);
+		
+		result+=ai1.generateMoves().size();
+		
+		if (result > 0){
+			System.out.println("END :"+result);
+			return false;
+		}else{
+			System.out.println("END OF GAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			return true;
+			}
+	}
+	
 
 
 }
