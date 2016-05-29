@@ -61,6 +61,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 	int[] sliding={-1,-1,0,-1};
 	String bonus="";
 	FrameJogo frameJogo;
+	private int winner=-1;
 	
 	public void novoJogo(Jogo jogo) {
 		this.repaint();
@@ -105,8 +106,19 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						for (int j = 0; j < 6; j++)
 							tempBoard[i][j]=board.getBoard()[i][j];
 					
-					moves.checkEndOfGame(0);
-					moves.checkEndOfGame(1);
+					if (moves.checkEndOfGame(0))
+						winner=1;
+					
+					board.setBoard(tempBoard);
+					
+					tempBoard = new int[6][6];
+					
+					for (int i = 0; i < 6; i++)
+						for (int j = 0; j < 6; j++)
+							tempBoard[i][j]=board.getBoard()[i][j];
+					
+					if (moves.checkEndOfGame(1))
+						winner=0;
 					
 					board.setBoard(tempBoard);
 					//moves.setBoard(board);
@@ -172,8 +184,19 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					for (int j = 0; j < 6; j++)
 						tempBoard[i][j]=board.getBoard()[i][j];
 				
-				moves.checkEndOfGame(0);
-				moves.checkEndOfGame(1);
+				if (moves.checkEndOfGame(0))
+					winner=1;
+				
+				board.setBoard(tempBoard);
+				
+				tempBoard = new int[6][6];
+				
+				for (int i = 0; i < 6; i++)
+					for (int j = 0; j < 6; j++)
+						tempBoard[i][j]=board.getBoard()[i][j];
+				
+				if (moves.checkEndOfGame(1))
+					winner=0;
 				
 				board.setBoard(tempBoard);
 				
@@ -270,6 +293,8 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 	@Override
 	public void mousePressed(MouseEvent e) {
 		this.requestFocus();
+		
+		
 		
 		if (pc)
 			return;
@@ -535,7 +560,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 
 		Graphics2D g2d = (Graphics2D) g.create();
 		imprimirTabuleiro(g, g2d, moves.getBoard(),
-				getWidth() - pnlButtons.getWidth(), getHeight());
+				getWidth() - pnlButtons.getWidth(), getHeight(),this.winner);
 		
 		if (mode == 2)
 			return;

@@ -87,7 +87,7 @@ public class Utilitarios {
 	    g2d.dispose();
 	}
 
-	static void imprimirTabuleiro(Graphics g, Graphics2D g2d,Board board, int largura, int altura) {
+	static void imprimirTabuleiro(Graphics g, Graphics2D g2d,Board board, int largura, int altura,int winner) {
 		final int ladoJogo = 6 + 1;
 		final int dimensao = Math.min(largura,altura) / ladoJogo;
 		
@@ -107,6 +107,11 @@ public class Utilitarios {
 		
 		if (board == null)
 			return;
+		
+		if (winner == 0)
+			imprimirStringQuadricula(g,"Black wins",3,7,dimensao);
+		else if (winner == 1)
+			imprimirStringQuadricula(g,"White wins",3,7,dimensao);
 		
 		for (int i = 0; i < board.getBoardSize(); i++)
 			for (int j = 0; j < board.getBoardSize(); j++)

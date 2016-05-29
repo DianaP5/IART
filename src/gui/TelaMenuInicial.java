@@ -209,7 +209,7 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 		else
 		{
 			Graphics2D g2d = (Graphics2D) g.create();
-			imprimirTabuleiro(g, g2d, board, getWidth()-pnlButtons.getWidth(), getHeight());
+			imprimirTabuleiro(g, g2d, board, getWidth()-pnlButtons.getWidth(), getHeight(),-1);
 			/*if (PecaSelecionada != null && !construtorTabuleiro.temPeca(PecaSelecionada) 
 					&& ratoX >= 0 && ratoY >= 0 && ratoX < 6 && ratoY < 6)
 			{
