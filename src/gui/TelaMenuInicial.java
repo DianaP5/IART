@@ -118,6 +118,15 @@ public class TelaMenuInicial extends JPanel implements MouseListener, KeyListene
 		pnlButtons.add(verticalGlue12);
 		
 		JButton botaoPC_PC = new JButton("PC vs PC");
+		botaoPC_PC.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					try {
+						frameJogo.trocarTela(new TelaInicioJogo(frameJogo,2));
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+		});
 		
 		Component verticalGlue11 = Box.createHorizontalGlue();
 		pnlButtons.add(verticalGlue11);

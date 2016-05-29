@@ -227,9 +227,9 @@ public class Moves {
 	public Boolean checkEndOfGame(int player){
 		int result=0;
 		
-		Ai ai1=new Ai(board);
+		Ai ai1=new Ai(board,player);
 		
-		ai1.setPlayer(player);
+		//ai1.setPlayer(player);
 		
 		result+=ai1.generateMoves(player).size();
 		

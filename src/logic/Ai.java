@@ -11,14 +11,21 @@ public class Ai {
 	private int oppSeed=0;
 	private int[] result;
 	
-	public Ai(Board board) {
+	public Ai(Board board,int player) {
 		this.setBoard(board);
+		
+		this.player=player;
+		
+		if (player == 0){
+			this.mySeed=0;
+			this.oppSeed=1;
+		}
 		 //level player alpha beta
 		int[] vals={-1,-1,0};
 		
 	      result = minimax(1, getPlayer(), Integer.MIN_VALUE+1, Integer.MAX_VALUE-1,vals);
 	         // depth, max-turn, alpha, beta
-	      board.printBoard();
+	      //board.printBoard();
 	      
 	      if (result.length == 3)
 	    	  return;
@@ -36,7 +43,7 @@ public class Ai {
 	    	  m1.setBoard(board);
 	    	  //int piece=board.getBoard()[result[1]][result[2]];
 	    	  
-	    	  m1.removePiece(result[1],result[2],1);
+	    	  m1.removePiece(result[1],result[2],player);
 	    	  
 	    	  int mul=1;
 	    	  
@@ -68,7 +75,7 @@ public class Ai {
 		b1.getBoard()[5][5]=-2;
 		b1.printBoard();
 		
-		new Ai(b1);
+		new Ai(b1,1);
 		
 	}
 	
@@ -144,7 +151,7 @@ public class Ai {
 		
 		int bestRow=move[0], bestCol=move[1], piece=move[2];
 		int returnValue=0;
-		board.printBoard();
+		//board.printBoard();
 		System.out.println("MOVE: "+move.length+" "+bestRow+" "+bestCol);
 		
 		if (move.length == 3){
@@ -241,8 +248,10 @@ public class Ai {
 			m1.setBoard(board);
 			//int piece=m1.getBoard().getBoard()[bestRow][bestCol];
 			
-			m1.removePiece(bestRow, bestCol, 1);
+
 			int oldPiece=board.getBoard()[bestRow][bestCol];
+			
+			m1.removePiece(bestRow, bestCol, player);
 			int mul=1;
 			
 			if (piece > 0)
@@ -260,7 +269,7 @@ public class Ai {
 				if (oldPosValue < 0)
 					returnValue-=oldPosValue;
 				
-				System.out.println("TESTING TESTING: "+oldPosValue);
+				System.out.println("TESTING TESTING: "+oldPosValue+" "+bestRow+" "+bestCol+" "+oldPiece);
 				
 				for (int n = 0; n < 6; n++)
 					for (int m = 0; m < 6; m++){
@@ -276,9 +285,9 @@ public class Ai {
 				
 				System.out.println("prev: "+returnValue);
 				if (m1.getBoard().getBoard()[slideX][slideY] > 0 && count == 0)
-					returnValue-=100;
+					returnValue-=60;
 				else if (count == 0)
-					returnValue+=20;
+					returnValue+=10;
 
 				System.out.println("after: "+returnValue);
 				
@@ -289,18 +298,17 @@ public class Ai {
 				board.printBoard();
 			}
 			System.out.println("DIFF_: "+count);
-			
 
-			int a=returnValue+count*60-own*60;
+			int a=returnValue+count*60-own*65;
 			
 			System.out.println("VALUE :"+a);
 			
-		return returnValue+count*60-own*60;
+		return returnValue+count*60-own*65;
 	}
 
 	private int evaluatePlace(int bestRow, int bestCol,int p,int player) {
 		int[] p1 = {-2,-3,-4,-1};
-		int active=0, opp=-1;
+		int returnValue=0, opp=-1;
 		
 		int delta=1;
 		
@@ -315,8 +323,10 @@ public class Ai {
 		
 		
 		if (p < 0)
-			active+=10;
-		else active-=10;
+			returnValue+=40;
+		else returnValue-=30;
+		
+		System.out.println("PREV: "+returnValue+" "+p+" "+player);
 		
 		Moves m1=new Moves();
 		m1.setBoard(getBoard());
@@ -331,13 +341,13 @@ public class Ai {
 								
 								if (bestCol + 1 < 6)
 									bestCol++;
-								m1.removePiece(i, j, 0);
+								m1.removePiece(i, j, opp);
 								
 								System.out.println("opt1");
 								if (m1.slidePiece(i, j, i, bestCol, opp, -piece -delta,piece))
-									return -20+active;
+									return returnValue+= -20;
 								else if (m1.slidePiece(i, j, i,5-bestCol, opp, -piece -delta,piece))
-									return -20+active;
+									return returnValue+=-20;
 							}
 							if (j == bestCol - 1 || j == bestCol + 1){
 								int piece=m1.getBoard().getBoard()[i][j];
@@ -345,20 +355,20 @@ public class Ai {
 								if (bestRow + 1 < 6)
 									bestRow++;
 								
-								m1.removePiece(i, j, 0);
+								m1.removePiece(i, j, opp);
 								
 								System.out.println("opt2"+i+" "+j+" "+" "+bestRow+" "+j+" ");
 								if (m1.slidePiece(i, j, bestRow,j, opp, -piece -delta,piece))
-									return -20+active;
+									return returnValue+= -20;
 								else if (m1.slidePiece(i, j, 5-bestRow,j, opp, -piece -delta,piece))
-									return -20+active;
+									return returnValue+= -20;
 							}
 						}
 			}
+		if (bestRow == 0 && bestCol == 1 && player == 0)
+			System.out.println("RETURNVALUEPLACE: "+returnValue);
 		
-		System.out.println("ATIVE: "+active);
-		
-		return 10+active;
+		return returnValue;
 	}
 	
 	private ArrayList<int[]> generateSlides(int player) {
@@ -386,7 +396,7 @@ public class Ai {
 							int[] old={i,j,p2[k]};
 							
 							for (int h=0; h < 6; h++){
-								m1.removePiece(i, j, 1);
+								m1.removePiece(i, j, player);
 								for (int b=0; b < p3.length;b++){
 									if (p3[b] > 0)
 										mul=1;
@@ -397,11 +407,11 @@ public class Ai {
 										moves.add(temp);
 										//System.out.println("O1: "+temp[2]+" "+temp[3]);
 										//m1.getBoard().printBoard();
-										m1.removePiece(i, j, 1);
+										m1.removePiece(i, j, player);
 									}}
 							}
 							
-							m1.removePiece(i, j, 1);
+							m1.removePiece(i, j, player);
 							
 							for (int h=0; h < 6; h++)
 								for (int b=0; b < p3.length;b++){
@@ -412,10 +422,10 @@ public class Ai {
 									int[] temp={i, j, h, j,p3[b]};
 									moves.add(temp);
 									//System.out.println("O2: "+temp[2]+" "+temp[3]);
-									m1.removePiece(i, j, 1);
+									m1.removePiece(i, j, player);
 								}
 								}
-							m1.removePiece(i, j, 1);
+							m1.removePiece(i, j, player);
 							
 							for (int h=0; h < 6; h++)
 								for (int b=0; b < p3.length;b++){
@@ -426,11 +436,11 @@ public class Ai {
 									int[] temp={i, j, i, 5-h,p3[b]};
 									moves.add(temp);
 									//System.out.println("O3: "+temp[2]+" "+temp[3]);
-									m1.removePiece(i, j, 1);
+									m1.removePiece(i, j, player);
 									//m1.getBoard().getBoard()[i][j]=piece;
 								}}
 							
-							m1.removePiece(i, j, 1);
+							m1.removePiece(i, j, player);
 							
 							for (int h=0; h < 6; h++)
 								for (int b=0; b < p3.length;b++){
@@ -441,7 +451,7 @@ public class Ai {
 									int[] temp={i, j, i, h,p3[b]};
 									moves.add(temp);
 									//System.out.println("O4: "+temp[2]+" "+temp[3]);
-									m1.removePiece(i, j, 1);
+									m1.removePiece(i, j, player);
 									//m1.getBoard().getBoard()[i][j]=piece;
 								}}
 							board.getBoard()[old[0]][old[1]]=old[2];

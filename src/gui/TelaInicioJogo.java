@@ -38,6 +38,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 	
 	private int mode;
 	private Boolean pc=true;
+	private Boolean whitePc=true;
 	//private Boolean opp=true;
 	
 	private JPanel pnlButtons;
@@ -117,7 +118,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						
 						//while(true){
 							if (pc){
-								Ai ai1=new Ai(board);
+								Ai ai1=new Ai(board,1);
 								moves.pieces[1]=ai1.getnPieces();
 								board=ai1.getBoard();
 								
@@ -126,7 +127,23 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 							}
 						//}			
 					}else{
-						
+						if (whitePc){
+							Ai ai1=new Ai(board,1);
+							moves.pieces[player]=ai1.getnPieces();
+							
+							board=ai1.getBoard();
+							
+							repaint();
+							whitePc=false;
+						}else{
+							Ai ai1=new Ai(board,0);
+							moves.pieces[player]=ai1.getnPieces();
+							
+							board=ai1.getBoard();
+							
+							repaint();
+							whitePc=true;
+						}
 					}
 			}
 		});
@@ -144,6 +161,9 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				
 				/*if (opp)
 					player = 1;*/
+				
+				if (pc)
+					player=1;
 				
 
 				int[][] tempBoard = new int[6][6];
@@ -165,17 +185,35 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					
 					//while(true){
 						if (pc){
-							Ai ai1=new Ai(board);
+							Ai ai1=new Ai(board,1);
 							moves.pieces[1]=ai1.getnPieces();
 							
 							board=ai1.getBoard();
 							
 							repaint();
 							pc=false;
+							player=0;
 						}
 					//}			
 				}else{
-					
+					if (whitePc){
+						Ai ai1=new Ai(board,1);
+						moves.pieces[player]=ai1.getnPieces();
+						
+						board=ai1.getBoard();
+						
+						repaint();
+						whitePc=false;
+					}else{
+						Ai ai1=new Ai(board,0);
+						moves.pieces[player]=ai1.getnPieces();
+						
+						System.out.println(moves.pieces[player]+" "+ai1.getnPieces());
+						board=ai1.getBoard();
+						
+						repaint();
+						whitePc=true;
+					}
 				}
 			}
 		});
@@ -498,6 +536,9 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 		Graphics2D g2d = (Graphics2D) g.create();
 		imprimirTabuleiro(g, g2d, moves.getBoard(),
 				getWidth() - pnlButtons.getWidth(), getHeight());
+		
+		if (mode == 2)
+			return;
 		
 		if (this.isSliding || this.activating || this.pivoting){
 			g2d.setComposite(AlphaComposite.SrcOver.derive(0.5f));
