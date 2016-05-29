@@ -167,7 +167,7 @@ public class Ai {
 			for (int j = 0; j < 6; j++)
 				tempBoard[i][j]=board.getBoard()[i][j];
 		
-		returnValue+=evaluatePlace(bestRow,bestCol,piece);
+		returnValue+=evaluatePlace(bestRow,bestCol,piece,player);
 		
 		//random 4
 		if (bestRow == 0 && bestCol == 0)
@@ -201,14 +201,14 @@ public class Ai {
 		int slideX=move[2],slideY=move[3];
 		piece=move[4];
 		
-		returnValue+=evaluateSlide(bestRow,bestCol,slideX,slideY,piece);
+		returnValue+=evaluateSlide(bestRow,bestCol,slideX,slideY,piece,player);
 		
 		return returnValue;
 	}
 		
 	}
 
-	private int evaluateSlide(int bestRow, int bestCol, int slideX, int slideY,int piece) {
+	private int evaluateSlide(int bestRow, int bestCol, int slideX, int slideY,int piece,int player) {
 
 		/*
 		   1) 1.1)Verificar se pode mover e desativar outras peças e ficar ativo-> 10+x*10 x: nº de peças desativadas
@@ -219,8 +219,15 @@ public class Ai {
 			1.6) Verifica se pode mover sem desativar e poder ser desativado -> -20
 		 */
 		
-		int count=0,returnValue=0;
-		Boolean inactive=false;
+		int count=0,returnValue=0, own=0;
+		
+		int delta=5;
+		int[] p2 = { 6,7,8,5};
+		
+		if (player == 0){
+			p2=new int[]{ 2, 3, 4, 1,};
+			delta=1;
+		}
 		
 		int[][] tempBoard = new int[6][6];
 		
@@ -235,28 +242,45 @@ public class Ai {
 			//int piece=m1.getBoard().getBoard()[bestRow][bestCol];
 			
 			m1.removePiece(bestRow, bestCol, 1);
+			int oldPiece=board.getBoard()[bestRow][bestCol];
 			int mul=1;
 			
 			if (piece > 0)
 				mul=1;
 			else mul=-1;
 			
-			if (m1.slidePiece(bestRow, bestCol, slideX, slideY, 1, piece*mul-5, piece)){
+			if (m1.slidePiece(bestRow, bestCol, slideX, slideY, 1, piece*mul-delta, piece)){
 				
 				//board.setBoard(tempBoard);
 				
 				//board.printBoard();
 				
-				for (int n = 0; n < 6; n++)
-					for (int m = 0; m < 6; m++) //>
-						if (m1.getBoard().getBoard()[n][m] > tempBoard[n][m] && m1.getBoard().getBoard()[n][m] != 0 && ( n != slideX || m != slideY))
-							count++;
+				int oldPosValue=this.evaluatePlace(bestRow, bestCol, oldPiece,player);
 				
+				if (oldPosValue < 0)
+					returnValue-=oldPosValue;
+				
+				System.out.println("TESTING TESTING: "+oldPosValue);
+				
+				for (int n = 0; n < 6; n++)
+					for (int m = 0; m < 6; m++){
+						for (int g=0; g < p2.length; g++){
+							if (m1.getBoard().getBoard()[n][m] > tempBoard[n][m] && m1.getBoard().getBoard()[n][m] != 0 && ( n != slideX || m != slideY))
+								count++;
+							if (m1.getBoard().getBoard()[n][m] == p2[g] && m1.getBoard().getBoard()[n][m] > tempBoard[n][m] && m1.getBoard().getBoard()[n][m] != 0 && ( n != slideX || m != slideY))
+								own++;
+						}
+					}
+				
+				count-=own;
+				
+				System.out.println("prev: "+returnValue);
 				if (m1.getBoard().getBoard()[slideX][slideY] > 0 && count == 0)
 					returnValue-=100;
 				else if (count == 0)
 					returnValue+=20;
-				
+
+				System.out.println("after: "+returnValue);
 				
 				board.printBoard();
 				
@@ -267,16 +291,28 @@ public class Ai {
 			System.out.println("DIFF_: "+count);
 			
 
-			int a=returnValue+count*60;
+			int a=returnValue+count*60-own*60;
 			
 			System.out.println("VALUE :"+a);
 			
-		return returnValue+count*60;
+		return returnValue+count*60-own*60;
 	}
 
-	private int evaluatePlace(int bestRow, int bestCol,int p) {
+	private int evaluatePlace(int bestRow, int bestCol,int p,int player) {
 		int[] p1 = {-2,-3,-4,-1};
-		int active=0;
+		int active=0, opp=-1;
+		
+		int delta=1;
+		
+		if (player == 0){
+			p1=new int[]{-5,-6,-7,-8 };
+			delta=5;
+		}
+		
+		if (player == 0)
+			opp=1;
+		else opp=0;
+		
 		
 		if (p < 0)
 			active+=10;
@@ -298,9 +334,9 @@ public class Ai {
 								m1.removePiece(i, j, 0);
 								
 								System.out.println("opt1");
-								if (m1.slidePiece(i, j, i, bestCol, 0, -piece -1,piece))
+								if (m1.slidePiece(i, j, i, bestCol, opp, -piece -delta,piece))
 									return -20+active;
-								else if (m1.slidePiece(i, j, i,5-bestCol, 0, -piece -1,piece))
+								else if (m1.slidePiece(i, j, i,5-bestCol, opp, -piece -delta,piece))
 									return -20+active;
 							}
 							if (j == bestCol - 1 || j == bestCol + 1){
@@ -312,9 +348,9 @@ public class Ai {
 								m1.removePiece(i, j, 0);
 								
 								System.out.println("opt2"+i+" "+j+" "+" "+bestRow+" "+j+" ");
-								if (m1.slidePiece(i, j, bestRow,j, 0, -piece -1,piece))
+								if (m1.slidePiece(i, j, bestRow,j, opp, -piece -delta,piece))
 									return -20+active;
-								else if (m1.slidePiece(i, j, 5-bestRow,j, 0, -piece -1,piece))
+								else if (m1.slidePiece(i, j, 5-bestRow,j, opp, -piece -delta,piece))
 									return -20+active;
 							}
 						}

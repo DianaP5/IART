@@ -315,9 +315,10 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 							else pc=true;
 						}
 					}else{
-						if (mode == 0)
-							pc=false;
-						else pc=true;
+						if (!this.isSliding)
+							if (mode == 0)
+								pc=false;
+							else pc=true;
 					}
 				} else if (player == 1){
 					if (p2[rotate[player]] > -9 && p2[rotate[player]] < -4){
@@ -356,9 +357,10 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 							else pc=true;
 						}
 					}else{
-						if (mode == 0)
-							pc=false;
-						else pc=true;
+						if (!this.isSliding)
+							if (mode == 0)
+								pc=false;
+							else pc=true;
 					}
 					
 				}}else  if (e.getButton() == MouseEvent.BUTTON3 && moves.getBoard().getBonusMove() > -1 && bonus.equals("Pick up")){
