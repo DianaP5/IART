@@ -19,6 +19,10 @@ public class Ai {
 	      result = minimax(1, getPlayer(), Integer.MIN_VALUE+1, Integer.MAX_VALUE-1,vals);
 	         // depth, max-turn, alpha, beta
 	      board.printBoard();
+	      
+	      if (result.length == 3)
+	    	  return;
+	      
 	      System.out.println("REPARA NISTO: "+result[0]+" "+result[1]+" "+result[2]+" "+result[4]+" "+result[5]);
 	      
 	      if (result[4] == -1 && result[5] == -1){
@@ -70,9 +74,8 @@ public class Ai {
 	
 	 private int[] minimax(int depth, int player, int alpha, int beta,int[] move) {
 	      // Generate possible next moves in a list of int[2] of {row, col}.
-	      ArrayList<int[]> nextMoves = generateMoves();
+	      ArrayList<int[]> nextMoves = generateMoves(player);
 	      
-	      System.out.println(nextMoves.size());
 	      
 	      // mySeed is maximizing; while oppSeed is minimizing
 	      int score = 0;
@@ -209,14 +212,15 @@ public class Ai {
 
 		/*
 		   1) 1.1)Verificar se pode mover e desativar outras peças e ficar ativo-> 10+x*10 x: nº de peças desativadas
-			1.2) Verificar se pode mover e desativar e ganha bonus-> 10+x*10+20
+			1.2) Verificar se pode mover e desativar e ganha bonus-> 20+x*10
 			1.3)Verifica se pode mover sem desativar e fugiu de poder ser desativado-> 5
 			1.4) Verifica se pode mover, desativar mas poder ser desativado -> x*10-10
 			1.5) Verifica se pode mover sem desativar -> 0
 			1.6) Verifica se pode mover sem desativar e poder ser desativado -> -20
 		 */
 		
-		int count=0;
+		int count=0,returnValue=0;
+		Boolean inactive=false;
 		
 		int[][] tempBoard = new int[6][6];
 		
@@ -245,8 +249,15 @@ public class Ai {
 				
 				for (int n = 0; n < 6; n++)
 					for (int m = 0; m < 6; m++) //>
-						if (m1.getBoard().getBoard()[n][m] != tempBoard[n][m])
+						if (m1.getBoard().getBoard()[n][m] > tempBoard[n][m] && m1.getBoard().getBoard()[n][m] != 0 && ( n != slideX || m != slideY))
 							count++;
+				
+				if (m1.getBoard().getBoard()[slideX][slideY] > 0 && count == 0)
+					returnValue-=100;
+				else if (count == 0)
+					returnValue+=20;
+				
+				
 				board.printBoard();
 				
 				board.setBoard(tempBoard);
@@ -255,7 +266,12 @@ public class Ai {
 			}
 			System.out.println("DIFF_: "+count);
 			
-		return 5+(count-1)*10;
+
+			int a=returnValue+count*60;
+			
+			System.out.println("VALUE :"+a);
+			
+		return returnValue+count*60;
 	}
 
 	private int evaluatePlace(int bestRow, int bestCol,int p) {
@@ -283,9 +299,9 @@ public class Ai {
 								
 								System.out.println("opt1");
 								if (m1.slidePiece(i, j, i, bestCol, 0, -piece -1,piece))
-									return -10+active;
+									return -20+active;
 								else if (m1.slidePiece(i, j, i,5-bestCol, 0, -piece -1,piece))
-									return -10+active;
+									return -20+active;
 							}
 							if (j == bestCol - 1 || j == bestCol + 1){
 								int piece=m1.getBoard().getBoard()[i][j];
@@ -297,20 +313,29 @@ public class Ai {
 								
 								System.out.println("opt2"+i+" "+j+" "+" "+bestRow+" "+j+" ");
 								if (m1.slidePiece(i, j, bestRow,j, 0, -piece -1,piece))
-									return -10+active;
+									return -20+active;
 								else if (m1.slidePiece(i, j, 5-bestRow,j, 0, -piece -1,piece))
-									return -10+active;
+									return -20+active;
 							}
 						}
 			}
 		
+		System.out.println("ATIVE: "+active);
+		
 		return 10+active;
 	}
 	
-	private ArrayList<int[]> generateSlides() {
+	private ArrayList<int[]> generateSlides(int player) {
 		int[] p2 = {-6,-7,-8,-5};
 		int[] p3 = {-6,6,-7,7,-8,8,-5,5};
 		int mul=1;
+		int delta=5;
+		
+		if (player == 0){
+			p2=new int[]{-2,-3,-4,-1 };
+			p3=new int[]{ 2, -2, 3, -3, 4, -4, 1, -1 };
+			delta=1;
+		}
 		
 		ArrayList<int[]> moves=new ArrayList<int[]>();
 
@@ -331,7 +356,7 @@ public class Ai {
 										mul=1;
 									else mul=-1;
 									
-									if (m1.slidePieceHeu(i, j, 5-h, j, 1, p3[b]*mul -5,p3[b])){
+									if (m1.slidePieceHeu(i, j, 5-h, j, player, p3[b]*mul -delta,p3[b])){
 										int[] temp={i, j, 5-h, j,p3[b]};
 										moves.add(temp);
 										//System.out.println("O1: "+temp[2]+" "+temp[3]);
@@ -347,7 +372,7 @@ public class Ai {
 									if (p3[b] > 0)
 										mul=1;
 									else mul=-1;
-								if (m1.slidePieceHeu(i, j, h, j, 1, p3[b]*mul -5,p3[b])){
+								if (m1.slidePieceHeu(i, j, h, j, player, p3[b]*mul -delta,p3[b])){
 									int[] temp={i, j, h, j,p3[b]};
 									moves.add(temp);
 									//System.out.println("O2: "+temp[2]+" "+temp[3]);
@@ -361,7 +386,7 @@ public class Ai {
 									if (p3[b] > 0)
 										mul=1;
 									else mul=-1;
-								if (m1.slidePieceHeu(i, j, i, 5-h, 1, p3[b]*mul -5,p3[b])){
+								if (m1.slidePieceHeu(i, j, i, 5-h, player, p3[b]*mul -delta,p3[b])){
 									int[] temp={i, j, i, 5-h,p3[b]};
 									moves.add(temp);
 									//System.out.println("O3: "+temp[2]+" "+temp[3]);
@@ -376,7 +401,7 @@ public class Ai {
 									if (p3[b] > 0)
 										mul=1;
 									else mul=-1;
-								if (m1.slidePieceHeu(i, j, i, h, 1, p3[b]*mul -5,p3[b])){
+								if (m1.slidePieceHeu(i, j, i, h, player, p3[b]*mul -delta,p3[b])){
 									int[] temp={i, j, i, h,p3[b]};
 									moves.add(temp);
 									//System.out.println("O4: "+temp[2]+" "+temp[3]);
@@ -399,23 +424,30 @@ public class Ai {
 		return moves;
 	}
 	
-	private ArrayList<int[]> generatePlaces(){
+	private ArrayList<int[]> generatePlaces(int player){
 		ArrayList<int[]> moves=new ArrayList<int[]>();
 		
 		Moves m1=new Moves();
 		m1.setBoard(getBoard());
+		
+		int delta=5;
 		int[] p2 = { 6, -6, 7, -7, 8, -8, 5, -5 };
-			
+		
+		if (player == 0){
+			p2=new int[]{ 2, -2, 3, -3, 4, -4, 1, -1 };
+			delta=1;
+		}
+		
 		for (int i = 0; i < 6; i++)
 			for (int j = 0; j < 6; j++){
 				for (int k=0; k < p2.length; k++)
-					if (p2[k] > -9 && p2[k] < -4){
-						if (m1.placePieceInit(i, j, 1, -p2[k]-5, p2[k])){
+					if (p2[k] < 0){
+						if (m1.placePieceInit(i, j, player, -p2[k]-delta, p2[k])){
 							getBoard().getBoard()[i][j]=0;
 							int[] temp={i,j,p2[k]};
 							moves.add(temp);
 						}
-					}else if (m1.placePieceInit(i, j, 1,p2[k]-5, p2[k])){
+					}else if (m1.placePieceInit(i, j, player,p2[k]-delta, p2[k])){
 						getBoard().getBoard()[i][j]=0;
 							int[] temp={i,j,p2[k]};
 							moves.add(temp);
@@ -424,9 +456,9 @@ public class Ai {
 		return moves;
 	}
 	
-	public ArrayList<int[]> generateMoves() {
-		ArrayList<int[]> places=generatePlaces();
-		ArrayList<int[]> slides=generateSlides();
+	public ArrayList<int[]> generateMoves(int player) {
+		ArrayList<int[]> places=generatePlaces(player);
+		ArrayList<int[]> slides=generateSlides(player);
 		
 		for (int i=0; i < places.size();i++)
 			slides.add(places.get(i));

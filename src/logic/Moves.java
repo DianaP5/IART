@@ -145,8 +145,18 @@ public class Moves {
 	
 	public Boolean placePieceInit(int x,int y,int player,int direction,int piece){
 		
+		int nBlack=0,nWhite=0;
+		
+		for (int i = 0; i < 6; i++)
+			for (int j = 0; j < 6; j++)
+				if (((board.getBoard()[i][j] > -5 && board.getBoard()[i][j] < 0)) || (board.getBoard()[i][j] > 0 && board.getBoard()[i][j] < 5))
+					nBlack++;
+				else if (((board.getBoard()[i][j] > -9 && board.getBoard()[i][j] < -4)) || (board.getBoard()[i][j] > 4 && board.getBoard()[i][j] < 9))
+					nWhite++;
+				
+					
 				//checks first move for each player
-				if ((pieces[player] < 10 && player == 0 ) || (pieces[player] < 10 && player == 1)){
+				if ((nBlack > 0 && player == 0 ) || (nWhite > 0 && player == 1)){
 					if (!board.slidable(player))
 						return false;
 				}else if (player == 0)
@@ -159,7 +169,6 @@ public class Moves {
 		
 		if (!board.checkValidPlace(x,y,player,direction,piece,0))
 			return false;
-		System.out.println(pieces[player]);
 		
 		getBoard().setBonusMove(-1);
 		
@@ -219,11 +228,10 @@ public class Moves {
 		int result=0;
 		
 		Ai ai1=new Ai(board);
-		System.out.println("NNNNN: "+ai1.getnPieces());
 		
 		ai1.setPlayer(player);
 		
-		result+=ai1.generateMoves().size();
+		result+=ai1.generateMoves(player).size();
 		
 		if (result > 0){
 			System.out.println("END :"+result);

@@ -104,9 +104,12 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						for (int j = 0; j < 6; j++)
 							tempBoard[i][j]=board.getBoard()[i][j];
 					
+					moves.checkEndOfGame(0);
 					moves.checkEndOfGame(1);
-					//board.checkEndOfGame(1);
-					moves.setBoard(board);
+					
+					board.setBoard(tempBoard);
+					//moves.setBoard(board);
+					
 					if (mode == 0){
 						pc=false;
 					}else if (mode == 1){
@@ -141,6 +144,18 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 				
 				/*if (opp)
 					player = 1;*/
+				
+
+				int[][] tempBoard = new int[6][6];
+				
+				for (int i = 0; i < 6; i++)
+					for (int j = 0; j < 6; j++)
+						tempBoard[i][j]=board.getBoard()[i][j];
+				
+				moves.checkEndOfGame(0);
+				moves.checkEndOfGame(1);
+				
+				board.setBoard(tempBoard);
 				
 				if (mode == 0){
 					player=1;
