@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Ai {
 	
@@ -11,9 +12,9 @@ public class Ai {
 	private int oppSeed=0;
 	private int[] result;
 	
-	public Ai(Board board,int player) {
+	public Ai(Board board,int player,int nPieces) {
 		this.setBoard(board);
-		
+		this.nPieces=nPieces;
 		this.player=player;
 		
 		if (player == 0){
@@ -39,10 +40,10 @@ public class Ai {
 	    	  }
 	      	System.out.println("PLACE: "+result[1]+" "+result[2]);
 	      }else{
+	    	  
 	    	  Moves m1=new Moves();
 	    	  m1.setBoard(board);
 	    	  //int piece=board.getBoard()[result[1]][result[2]];
-	    	  
 	    	  m1.removePiece(result[1],result[2],player);
 	    	  
 	    	  int mul=1;
@@ -51,9 +52,13 @@ public class Ai {
 	    		  mul=1;
 	    	  else mul=-1;
 	    	  
-	    	  m1.slidePiece(result[1], result[2], result[4],result[5], 1,result[3]*mul-5, result[3]);
-	    	  int cenas=result[3]*mul-5;
-	    	  System.out.println("CENAS: "+cenas);
+	    	  int delta=5;
+	    	  
+	    	  if (player == 0){
+	  			delta=1;
+	  		}
+	    	  
+	    	  m1.slidePiece(result[1], result[2], result[4],result[5], player,result[3]*mul-delta, result[3]);
 	    	  
 	      }
 	      
@@ -75,7 +80,7 @@ public class Ai {
 		b1.getBoard()[5][5]=-2;
 		b1.printBoard();
 		
-		new Ai(b1,1);
+		new Ai(b1,1,1);
 		
 	}
 	
@@ -176,25 +181,30 @@ public class Ai {
 		
 		returnValue+=evaluatePlace(bestRow,bestCol,piece,player);
 		
+		Random r = new Random();
+		int rand = r.nextInt(4);
+		
 		//random 4
 		if (bestRow == 0 && bestCol == 0)
-			returnValue+= 2;
+			returnValue+= r.nextInt(4);
 		else if (bestRow == 0 && bestCol == 5)
-			returnValue+= 2;
+			returnValue+= r.nextInt(4);
 		else if (bestRow == 5 && bestCol == 0)
-			returnValue+= 2;
+			returnValue+= r.nextInt(4);
 		else if (bestRow == 5 && bestCol == 5)
-			returnValue+= 2;
+			returnValue+= r.nextInt(4);
+		
+		r = new Random();
 		
 		//random 4
 		if (bestRow == 0)
-			returnValue+= 1;
+			returnValue+= r.nextInt(4);
 		else if (bestCol == 0)
-			returnValue+= 1;
+			returnValue+= r.nextInt(4);
 		else if (bestRow == 5 )
-			returnValue+= 1;
+			returnValue+= r.nextInt(4);
 		else if (bestCol == 5)
-			returnValue+= 1;
+			returnValue+= r.nextInt(4);
 		
 		/*if (board.checkActivePiece(bestRow, bestCol, 1)){
 			returnValue+=10;

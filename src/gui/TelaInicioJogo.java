@@ -106,7 +106,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						for (int j = 0; j < 6; j++)
 							tempBoard[i][j]=board.getBoard()[i][j];
 					
-					if (moves.checkEndOfGame(0))
+					if (moves.checkEndOfGame(0,moves.pieces[0]))
 						winner=1;
 					
 					board.setBoard(tempBoard);
@@ -117,7 +117,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						for (int j = 0; j < 6; j++)
 							tempBoard[i][j]=board.getBoard()[i][j];
 					
-					if (moves.checkEndOfGame(1))
+					if (moves.checkEndOfGame(1,moves.pieces[1]))
 						winner=0;
 					
 					board.setBoard(tempBoard);
@@ -130,7 +130,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						
 						//while(true){
 							if (pc){
-								Ai ai1=new Ai(board,1);
+								Ai ai1=new Ai(board,1,moves.pieces[1]);
 								moves.pieces[1]=ai1.getnPieces();
 								board=ai1.getBoard();
 								
@@ -140,17 +140,18 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						//}			
 					}else{
 						if (whitePc){
-							Ai ai1=new Ai(board,1);
-							moves.pieces[player]=ai1.getnPieces();
+							Ai ai1=new Ai(board,1,moves.pieces[1]);
+							moves.pieces[1]=ai1.getnPieces();
 							
 							board=ai1.getBoard();
 							
 							repaint();
 							whitePc=false;
 						}else{
-							Ai ai1=new Ai(board,0);
-							moves.pieces[player]=ai1.getnPieces();
+							Ai ai1=new Ai(board,0,moves.pieces[0]);
+							moves.pieces[0]=ai1.getnPieces();
 							
+							System.out.println(moves.pieces[player]+" "+ai1.getnPieces());
 							board=ai1.getBoard();
 							
 							repaint();
@@ -184,7 +185,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					for (int j = 0; j < 6; j++)
 						tempBoard[i][j]=board.getBoard()[i][j];
 				
-				if (moves.checkEndOfGame(0))
+				if (moves.checkEndOfGame(0,moves.pieces[0]))
 					winner=1;
 				
 				board.setBoard(tempBoard);
@@ -195,7 +196,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					for (int j = 0; j < 6; j++)
 						tempBoard[i][j]=board.getBoard()[i][j];
 				
-				if (moves.checkEndOfGame(1))
+				if (moves.checkEndOfGame(1,moves.pieces[1]))
 					winner=0;
 				
 				board.setBoard(tempBoard);
@@ -208,7 +209,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					
 					//while(true){
 						if (pc){
-							Ai ai1=new Ai(board,1);
+							Ai ai1=new Ai(board,1,moves.pieces[1]);
 							moves.pieces[1]=ai1.getnPieces();
 							
 							board=ai1.getBoard();
@@ -220,16 +221,16 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 					//}			
 				}else{
 					if (whitePc){
-						Ai ai1=new Ai(board,1);
-						moves.pieces[player]=ai1.getnPieces();
+						Ai ai1=new Ai(board,1,moves.pieces[1]);
+						moves.pieces[1]=ai1.getnPieces();
 						
 						board=ai1.getBoard();
 						
 						repaint();
 						whitePc=false;
 					}else{
-						Ai ai1=new Ai(board,0);
-						moves.pieces[player]=ai1.getnPieces();
+						Ai ai1=new Ai(board,0,moves.pieces[0]);
+						moves.pieces[0]=ai1.getnPieces();
 						
 						System.out.println(moves.pieces[player]+" "+ai1.getnPieces());
 						board=ai1.getBoard();
@@ -238,6 +239,7 @@ public class TelaInicioJogo extends JPanel implements MouseListener,
 						whitePc=true;
 					}
 				}
+				System.out.println("ISTO: "+moves.pieces[0]+" "+moves.pieces[1]);
 			}
 		});
 

@@ -224,10 +224,10 @@ public class Moves {
 		
 	}
 	
-	public Boolean checkEndOfGame(int player){
+	public Boolean checkEndOfGame(int player,int nPieces){
 		int result=0;
 		
-		Ai ai1=new Ai(board,player);
+		Ai ai1=new Ai(board,player,nPieces);
 		
 		//ai1.setPlayer(player);
 		
